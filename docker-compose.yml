@@ -1,0 +1,20 @@
+services:
+  nephron:
+    build: .
+    image: nephron-study:latest
+    container_name: nephron-study
+    ports:
+      - "8973:8973"                       # point your existing Cloudflare tunnel at http://<unraid-ip>:8973
+    environment:
+      - DATA_PATH=/data/data.json         # the deck "database" (persisted on the volume below)
+      - PORT=8973
+      # The whole site is behind a login (secure by default). Username defaults to 'admin';
+      # if you don't set a password, the server auto-generates one on first run and prints it in
+      # the logs (docker compose logs nephron | grep -i login) — saved on the volume, stable.
+      # To choose your own, set them here or in a .env file (see .env.example):
+      - AUTH_USER=${AUTH_USER:-admin}
+      - AUTH_PASSWORD=${AUTH_PASSWORD:-}
+    volumes:
+      - ./data:/data                      # host-side persistence; seeded from the baked-in deck on first run
+    restart: unless-stopped
+    # No egress needed; web-fonts fall back to system fonts offline.

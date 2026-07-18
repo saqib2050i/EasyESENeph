@@ -1,0 +1,14 @@
+.git
+.claude
+data
+.auth_password
+.session_secret
+.env
+data.json.bak
+*.bak
+*.pdf
+*.docx
+__pycache__
+*.pyc
+.DS_Store
+scratchpad

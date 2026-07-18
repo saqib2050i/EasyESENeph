@@ -1,0 +1,26 @@
+# secrets & runtime auth state — NEVER commit these
+.env
+.auth_password
+.session_secret
+.ingest_token
+
+# runtime deck volume + backups (the live data lives on the host/volume)
+/data/
+*.bak
+data.json.bak
+
+# python
+__pycache__/
+*.pyc
+
+# os / editor / tooling / local session state
+.DS_Store
+.claude/
+scratchpad/
+
+# source material used to generate batches (kept off the repo)
+*.pdf
+*.docx
+
+# your personal deck (load it through the site after deploy)
+my-deck.json

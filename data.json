@@ -1,0 +1,463 @@
+{
+  "meta": {
+    "exam": "ESENeph",
+    "owner": "",
+    "lastUpdated": "2026-07-04",
+    "totalMcqs": 8,
+    "sources": [
+      {
+        "name": "Sample seed",
+        "date": "2026-07-04",
+        "count": 8
+      }
+    ]
+  },
+  "topics": [
+    {
+      "id": "hyponatraemia-overcorrection-ods",
+      "title": "Overcorrection of chronic hyponatraemia & ODS",
+      "domain": "Fluid, Electrolyte & Acid–Base",
+      "subtopic": "Hyponatraemia",
+      "status": "weak",
+      "priority": 5,
+      "stats": {
+        "seen": 2,
+        "correct": 0
+      },
+      "encounters": [
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": false,
+          "note": "Chose 12 mmol/L/24h as safe limit"
+        },
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": false,
+          "note": "Missed high-risk criteria for ODS"
+        }
+      ],
+      "highYield": [
+        "Correction limit in chronic hyponatraemia: ≤8 mmol/L per 24h; ≤6 mmol/L if high ODS risk.",
+        "High ODS risk: Na⁺ ≤105, hypokalaemia, alcohol use, malnutrition, advanced liver disease.",
+        "Overcorrection rescue: stop hypertonic saline, give 5% dextrose ± desmopressin 2–4 µg to re-lower Na⁺.",
+        "ODS is delayed (2–6 days) and often biphasic: initial improvement then deterioration."
+      ],
+      "explainer": "Osmotic demyelination syndrome (ODS) is driven by **too-rapid correction**, not by the absolute sodium. In chronic hyponatraemia the brain has extruded osmolytes to adapt, so a fast rise in serum Na⁺ pulls water out of neurons.\n\nSafe correction is **≤8 mmol/L in 24h** (≤6 if high risk). If you overshoot, the intervention is *proactive re-lowering* with 5% dextrose and desmopressin — don't just wait.\n\nClassic exam trap: a question gives an acute symptomatic patient (seizure) where a rapid initial 4–6 mmol/L bump with hypertonic saline is correct, and expects you to *still* respect the 24h ceiling.",
+      "pitfalls": [
+        "Applying acute-hyponatraemia bolus logic to the 24-hour ceiling.",
+        "Forgetting desmopressin can be used deliberately to prevent overcorrection."
+      ],
+      "flashcards": [
+        {
+          "id": "hypo-ods-1",
+          "front": "Maximum Na⁺ correction over 24h in chronic hyponatraemia?",
+          "back": "≤8 mmol/L (≤6 mmol/L if high ODS risk).",
+          "tags": [
+            "hyponatraemia",
+            "ODS"
+          ]
+        },
+        {
+          "id": "hypo-ods-2",
+          "front": "Name three high-risk features for ODS.",
+          "back": "Na⁺ ≤105, hypokalaemia, alcoholism, malnutrition, advanced liver disease (any three).",
+          "tags": [
+            "ODS"
+          ]
+        },
+        {
+          "id": "hypo-ods-3",
+          "front": "How do you rescue an overcorrected patient?",
+          "back": "Stop hypertonic saline; 5% dextrose infusion ± desmopressin 2–4 µg to re-lower Na⁺.",
+          "tags": [
+            "hyponatraemia",
+            "management"
+          ]
+        }
+      ],
+      "references": [
+        "ESE Hyponatraemia Guideline 2014"
+      ]
+    },
+    {
+      "id": "distal-rta-type1",
+      "title": "Distal (type 1) renal tubular acidosis",
+      "domain": "Fluid, Electrolyte & Acid–Base",
+      "subtopic": "Renal tubular acidosis",
+      "status": "review",
+      "priority": 3,
+      "stats": {
+        "seen": 1,
+        "correct": 1
+      },
+      "encounters": [
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": true,
+          "note": "Correct but slow — confused urine pH threshold"
+        }
+      ],
+      "highYield": [
+        "Type 1 (distal) RTA: inability to acidify urine → urine pH >5.5 despite systemic acidosis.",
+        "Hypokalaemic, normal anion gap metabolic acidosis; positive urine anion gap.",
+        "Complications: nephrocalcinosis, calcium phosphate stones, bone disease.",
+        "Causes: Sjögren's, amphotericin B, hereditary, hypercalciuria."
+      ],
+      "explainer": "Distal RTA is a failure of H⁺ secretion in the collecting duct (α-intercalated cells). Because you cannot excrete acid, urine pH stays inappropriately high (**>5.5**) even when the blood is acidotic.\n\nThe picture is a **normal anion gap (hyperchloraemic) metabolic acidosis with hypokalaemia** and a **positive urine anion gap** (Na + K − Cl), signalling low urinary ammonium. Alkaline urine plus hypercalciuria and low citrate drives **calcium phosphate stones and nephrocalcinosis**.\n\nContrast with type 2 (proximal): urine can acidify (pH <5.5) once the lowered bicarbonate threshold is reached, and Fanconi features may coexist.",
+      "pitfalls": [
+        "Mixing up type 1 (urine pH stays >5.5) with type 2 (can drop <5.5).",
+        "Forgetting the urine anion gap is positive in distal RTA."
+      ],
+      "flashcards": [
+        {
+          "id": "rta1-1",
+          "front": "Urine pH in distal (type 1) RTA during acidosis?",
+          "back": "Inappropriately high, >5.5 — cannot acidify urine.",
+          "tags": [
+            "RTA"
+          ]
+        },
+        {
+          "id": "rta1-2",
+          "front": "Stone/calcification type associated with distal RTA?",
+          "back": "Calcium phosphate stones and nephrocalcinosis.",
+          "tags": [
+            "RTA",
+            "stones"
+          ]
+        }
+      ],
+      "references": []
+    },
+    {
+      "id": "membranous-pla2r",
+      "title": "Primary membranous nephropathy & PLA2R",
+      "domain": "Glomerular Diseases",
+      "subtopic": "Membranous nephropathy",
+      "status": "weak",
+      "priority": 4,
+      "stats": {
+        "seen": 1,
+        "correct": 0
+      },
+      "encounters": [
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": false,
+          "note": "Chose immediate immunosuppression regardless of risk"
+        }
+      ],
+      "highYield": [
+        "Anti-PLA2R antibodies positive in ~70–80% of primary MN; useful for diagnosis and monitoring.",
+        "Risk-based therapy: low-risk → supportive/ACEi for up to 6 months first.",
+        "High-risk (falling GFR, very high proteinuria, high anti-PLA2R): rituximab, or cyclophosphamide + steroids (Ponticelli).",
+        "Secondary causes: malignancy, hepatitis B, SLE (class V), NSAIDs — screen age-appropriately."
+      ],
+      "explainer": "Primary membranous nephropathy is an autoantibody disease; the **M-type phospholipase A2 receptor (PLA2R)** on podocytes is the dominant target antigen (THSD7A in a minority). Anti-PLA2R titres track disease activity and can guide treatment and predict remission.\n\nManagement is **risk-stratified**. Many patients remit spontaneously, so low-risk disease gets **conservative therapy** (RAS blockade, diuretics, statin, anticoagulation if albumin very low) for up to 6 months. Immunosuppression — **rituximab** or the **Ponticelli regimen** — is reserved for high-risk or deteriorating patients.\n\nExam trap: reflexively starting immunosuppression in a stable low-risk patient. Always screen for secondary causes.",
+      "pitfalls": [
+        "Immunosuppressing low-risk patients who may remit spontaneously.",
+        "Forgetting malignancy screening in older patients with MN."
+      ],
+      "flashcards": [
+        {
+          "id": "mn-1",
+          "front": "Dominant target antigen in primary membranous nephropathy?",
+          "back": "PLA2R (phospholipase A2 receptor); THSD7A in a minority.",
+          "tags": [
+            "membranous"
+          ]
+        },
+        {
+          "id": "mn-2",
+          "front": "First step for LOW-risk primary MN?",
+          "back": "Supportive therapy (RAS blockade etc.) for up to 6 months before considering immunosuppression.",
+          "tags": [
+            "membranous",
+            "management"
+          ]
+        }
+      ],
+      "references": [
+        "KDIGO 2021 Glomerular Diseases"
+      ]
+    },
+    {
+      "id": "iga-nephropathy-mest",
+      "title": "IgA nephropathy — MEST-C & risk",
+      "domain": "Glomerular Diseases",
+      "subtopic": "IgA nephropathy",
+      "status": "review",
+      "priority": 3,
+      "stats": {
+        "seen": 1,
+        "correct": 1
+      },
+      "encounters": [
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": true,
+          "note": ""
+        }
+      ],
+      "highYield": [
+        "Oxford MEST-C score: Mesangial, Endocapillary, Segmental sclerosis, Tubular atrophy, Crescents.",
+        "Foundation of care: maximal supportive therapy (RAS blockade, BP <120 systolic, SGLT2i).",
+        "Persistent proteinuria >0.75–1 g/day despite optimisation → consider systemic steroids (weigh TESTING trial toxicity).",
+        "Newer agents: targeted-release budesonide (Nefecon), sparsentan."
+      ],
+      "explainer": "IgA nephropathy is the commonest primary glomerulonephritis worldwide; galactose-deficient IgA1 immune complexes deposit in the mesangium. The **Oxford (MEST-C)** classification adds prognostic histology.\n\nThe pillar of treatment is **optimised supportive care**: RAS blockade to maximal tolerated dose, tight BP control, and increasingly **SGLT2 inhibitors**. Systemic corticosteroids are considered for persistent proteinuria despite this, but the **TESTING** trial highlighted infection risk, so it's a careful risk–benefit call. **Nefecon** (gut-targeted budesonide) and **sparsentan** are newer options.",
+      "pitfalls": [
+        "Jumping to steroids before supportive therapy is maximised.",
+        "Overlooking SGLT2 inhibitors as part of the supportive backbone."
+      ],
+      "flashcards": [
+        {
+          "id": "iga-1",
+          "front": "What does the C add to the Oxford MEST score?",
+          "back": "Crescents.",
+          "tags": [
+            "IgA"
+          ]
+        },
+        {
+          "id": "iga-2",
+          "front": "Proteinuria threshold prompting consideration of steroids in IgAN?",
+          "back": "Persistent >0.75–1 g/day despite maximal supportive therapy.",
+          "tags": [
+            "IgA",
+            "management"
+          ]
+        }
+      ],
+      "references": [
+        "KDIGO 2021",
+        "TESTING trial 2022"
+      ]
+    },
+    {
+      "id": "kt-v-dialysis-adequacy",
+      "title": "Haemodialysis adequacy — Kt/V & URR",
+      "domain": "Haemodialysis",
+      "subtopic": "Dialysis adequacy",
+      "status": "weak",
+      "priority": 4,
+      "stats": {
+        "seen": 1,
+        "correct": 0
+      },
+      "encounters": [
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": false,
+          "note": "Confused single-pool vs equilibrated Kt/V target"
+        }
+      ],
+      "highYield": [
+        "Minimum target single-pool Kt/V ≥1.2 per session for thrice-weekly HD; aim ~1.4.",
+        "URR (urea reduction ratio) target ≥65%.",
+        "Kt/V = clearance × time / volume of urea distribution (≈ total body water).",
+        "Inadequate dosing drivers: access recirculation, short time, low blood/dialysate flow, clotting."
+      ],
+      "explainer": "Dialysis adequacy is quantified by **Kt/V** (dialyzer clearance K × time t, divided by urea distribution volume V) and by the simpler **urea reduction ratio (URR)**.\n\nFor conventional thrice-weekly HD, aim for a **single-pool Kt/V ≥1.2** (target ~1.4) and **URR ≥65%**. Equilibrated Kt/V runs slightly lower than single-pool because of post-dialysis urea rebound. If numbers fall short, hunt for **access recirculation, reduced treatment time, low flows, or clotting**.",
+      "pitfalls": [
+        "Confusing single-pool with equilibrated Kt/V targets.",
+        "Treating Kt/V as the only marker of a good dialysis prescription (ignores fluid, mineral, symptoms)."
+      ],
+      "flashcards": [
+        {
+          "id": "ktv-1",
+          "front": "Minimum single-pool Kt/V for thrice-weekly HD?",
+          "back": "≥1.2 per session (aim ~1.4).",
+          "tags": [
+            "dialysis",
+            "adequacy"
+          ]
+        },
+        {
+          "id": "ktv-2",
+          "front": "Target urea reduction ratio (URR)?",
+          "back": "≥65%.",
+          "tags": [
+            "dialysis"
+          ]
+        }
+      ],
+      "references": [
+        "KDOQI Haemodialysis Adequacy 2015"
+      ]
+    },
+    {
+      "id": "transplant-antibody-rejection",
+      "title": "Antibody-mediated rejection (AMR)",
+      "domain": "Transplantation",
+      "subtopic": "Rejection",
+      "status": "weak",
+      "priority": 4,
+      "stats": {
+        "seen": 1,
+        "correct": 0
+      },
+      "encounters": [
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": false,
+          "note": "Missed C4d and DSA as the AMR triad"
+        }
+      ],
+      "highYield": [
+        "AMR diagnosis (Banff): histologic injury + C4d peritubular capillary staining + donor-specific antibodies (DSA).",
+        "C4d-negative AMR exists if molecular/microvascular inflammation criteria are met.",
+        "Treatment: plasma exchange + IVIG ± rituximab; consider steroids.",
+        "Contrast with T-cell-mediated rejection (tubulitis, interstitial infiltrate) → steroids ± ATG."
+      ],
+      "explainer": "Antibody-mediated rejection is driven by **donor-specific antibodies (DSA)** against HLA. The classic **Banff triad** is: histological evidence of acute tissue injury (microvascular inflammation — glomerulitis + peritubular capillaritis), **C4d deposition** in peritubular capillaries, and **circulating DSA**.\n\nModern Banff criteria allow **C4d-negative AMR** when molecular or microvascular inflammation thresholds are met. Treatment centres on antibody removal and suppression: **plasma exchange + IVIG**, often with **rituximab**. This is distinct from **T-cell-mediated rejection** (tubulitis/interstitial infiltrate), which responds to pulsed steroids ± ATG.",
+      "pitfalls": [
+        "Forgetting DSA is required to call AMR.",
+        "Assuming C4d negativity excludes AMR."
+      ],
+      "flashcards": [
+        {
+          "id": "amr-1",
+          "front": "Name the classic Banff triad for AMR.",
+          "back": "Tissue injury (microvascular inflammation) + C4d in peritubular capillaries + donor-specific antibodies.",
+          "tags": [
+            "transplant",
+            "AMR"
+          ]
+        },
+        {
+          "id": "amr-2",
+          "front": "First-line treatment approach for AMR?",
+          "back": "Plasma exchange + IVIG ± rituximab.",
+          "tags": [
+            "transplant",
+            "management"
+          ]
+        }
+      ],
+      "references": [
+        "Banff 2019 classification"
+      ]
+    },
+    {
+      "id": "ckd-mbd-phosphate",
+      "title": "CKD-MBD: phosphate & the FGF23 axis",
+      "domain": "CKD, Complications & Progression",
+      "subtopic": "CKD-MBD",
+      "status": "review",
+      "priority": 3,
+      "stats": {
+        "seen": 1,
+        "correct": 1
+      },
+      "encounters": [
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": true,
+          "note": ""
+        }
+      ],
+      "highYield": [
+        "Earliest biochemical change in CKD-MBD is a rise in FGF23, before overt PO4 or PTH change.",
+        "FGF23 lowers phosphate (phosphaturia) but also suppresses calcitriol → drives secondary hyperparathyroidism.",
+        "KDIGO: lower elevated phosphate toward normal; avoid routine calcium-based binders in adults.",
+        "Treat modifiable factors first: dietary phosphate, dialysis adequacy, then binders, then calcimimetics/active vitamin D."
+      ],
+      "explainer": "In CKD-MBD the **first measurable change is a rise in FGF23**, well before phosphate or PTH move. FGF23 promotes phosphaturia to defend serum phosphate, but it also **suppresses 1-α-hydroxylase**, cutting calcitriol and thereby fuelling **secondary hyperparathyroidism**.\n\nKDIGO guidance is to **lower elevated phosphate toward the normal range** using diet, adequate dialysis, and binders — while **restricting calcium-based binders** to limit vascular calcification. Active vitamin D and calcimimetics address the PTH axis.",
+      "pitfalls": [
+        "Naming PTH rather than FGF23 as the earliest change.",
+        "Over-using calcium-based binders."
+      ],
+      "flashcards": [
+        {
+          "id": "mbd-1",
+          "front": "Earliest biochemical abnormality in CKD-MBD?",
+          "back": "Rise in FGF23 (precedes phosphate and PTH changes).",
+          "tags": [
+            "CKD-MBD"
+          ]
+        },
+        {
+          "id": "mbd-2",
+          "front": "Two actions of FGF23?",
+          "back": "Promotes renal phosphate excretion; suppresses calcitriol synthesis.",
+          "tags": [
+            "CKD-MBD",
+            "physiology"
+          ]
+        }
+      ],
+      "references": [
+        "KDIGO CKD-MBD 2017 update"
+      ]
+    },
+    {
+      "id": "contrast-associated-aki",
+      "title": "Contrast-associated AKI — risk & prevention",
+      "domain": "Acute Kidney Injury",
+      "subtopic": "Nephrotoxins",
+      "status": "mastered",
+      "priority": 1,
+      "stats": {
+        "seen": 2,
+        "correct": 2
+      },
+      "encounters": [
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": true,
+          "note": ""
+        },
+        {
+          "date": "2026-07-04",
+          "source": "Sample seed",
+          "correct": true,
+          "note": ""
+        }
+      ],
+      "highYield": [
+        "Main preventive measure with evidence: peri-procedural isotonic IV crystalloid in at-risk patients.",
+        "PRESERVE trial: no benefit of N-acetylcysteine or sodium bicarbonate over saline.",
+        "Highest risk: pre-existing CKD (especially with diabetes), volume depletion, high contrast volume.",
+        "Modern intra-arterial data suggest true CA-AKI risk is lower than historically feared."
+      ],
+      "explainer": "Contrast-associated AKI risk has been **revised down** in recent years, with much historical 'contrast nephropathy' reflecting confounding. The intervention with the best evidence remains **peri-procedural volume expansion with isotonic saline** in higher-risk patients.\n\nThe **PRESERVE** trial showed **no added benefit** from N-acetylcysteine or sodium bicarbonate over saline alone. Highest risk sits with **CKD plus diabetes, volume depletion, and large contrast loads** — so hydrate, minimise contrast, and avoid other nephrotoxins around the procedure.",
+      "pitfalls": [
+        "Recommending N-acetylcysteine or bicarbonate as beneficial.",
+        "Withholding necessary imaging from stable eGFR patients out of exaggerated fear."
+      ],
+      "flashcards": [
+        {
+          "id": "caaki-1",
+          "front": "Best-evidence prevention for contrast-associated AKI?",
+          "back": "Peri-procedural isotonic IV saline in at-risk patients.",
+          "tags": [
+            "AKI",
+            "contrast"
+          ]
+        },
+        {
+          "id": "caaki-2",
+          "front": "What did the PRESERVE trial show?",
+          "back": "No benefit of N-acetylcysteine or sodium bicarbonate over saline.",
+          "tags": [
+            "AKI",
+            "trials"
+          ]
+        }
+      ],
+      "references": [
+        "PRESERVE trial NEJM 2018"
+      ]
+    }
+  ]
+}

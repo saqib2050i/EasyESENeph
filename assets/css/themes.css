@@ -1,0 +1,75 @@
+/* ============================================================
+   themes.css — colour tokens only
+   Each theme is a set of CSS custom properties under
+   html[data-theme="…"]. To add a theme: copy a block, rename,
+   retune the tokens, then add a matching swatch colour at the
+   bottom and a <button class="sw" data-t="name"> in the HTML.
+   Never hard-code colours in components — always use the tokens.
+   ============================================================ */
+:root{
+  --font-ui:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-read:'IBM Plex Serif',Georgia,serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,'SF Mono',monospace;
+  --r:10px; --r-sm:6px;
+  --shadow:0 1px 2px rgba(0,0,0,.18),0 8px 28px rgba(0,0,0,.14);
+  --w-max:1180px;
+}
+/* Nephron — deep clinical teal, amber accent (default) */
+html[data-theme="nephron"]{
+  --bg:#0d1b1e; --surface:#11262b; --surface-2:#0a171a; --raised:#163136;
+  --border:#234a51; --border-soft:#1b3a40;
+  --text:#e6f0ef; --text-dim:#8fb0ad; --text-faint:#5f827f;
+  --accent:#e6b54a; --accent-ink:#1a1205; --accent-soft:#3a2f10;
+  --link:#63c9c0;
+  --weak:#e8724c; --review:#e6b54a; --mastered:#4fbf8e;
+  --good:#4fbf8e; --bad:#e8724c;
+}
+/* Night — near-black, cyan accent */
+html[data-theme="night"]{
+  --bg:#08090b; --surface:#111318; --surface-2:#0b0d10; --raised:#171a20;
+  --border:#242833; --border-soft:#1a1d24;
+  --text:#e9eaee; --text-dim:#9096a3; --text-faint:#5b606d;
+  --accent:#57c7e8; --accent-ink:#04141b; --accent-soft:#0e2833;
+  --link:#57c7e8;
+  --weak:#f0704f; --review:#e9c15b; --mastered:#57cf9a;
+  --good:#57cf9a; --bad:#f0704f;
+}
+/* Paper — warm light, ink accent (reading & printing) */
+html[data-theme="paper"]{
+  --bg:#efe9dd; --surface:#faf6ec; --surface-2:#e7e0d0; --raised:#fffdf7;
+  --border:#d3c9b4; --border-soft:#e0d8c6;
+  --text:#25211a; --text-dim:#6a6152; --text-faint:#9a9080;
+  --accent:#9a5a2b; --accent-ink:#fff; --accent-soft:#ecdcc7;
+  --link:#7a4a20;
+  --weak:#b64a2c; --review:#a6791f; --mastered:#2f7d55;
+  --good:#2f7d55; --bad:#b64a2c;
+  --shadow:0 1px 2px rgba(90,70,40,.12),0 10px 30px rgba(120,90,50,.10);
+}
+/* Cortex — deep maroon, rose accent */
+html[data-theme="cortex"]{
+  --bg:#160d11; --surface:#241318; --surface-2:#100a0d; --raised:#2e1920;
+  --border:#4a2731; --border-soft:#381f27;
+  --text:#f0e3e6; --text-dim:#c09aa3; --text-faint:#8a636c;
+  --accent:#e79aa8; --accent-ink:#2a0d14; --accent-soft:#3d1c25;
+  --link:#e79aa8;
+  --weak:#ec6a6a; --review:#e0a94e; --mastered:#5fc79a;
+  --good:#5fc79a; --bad:#ec6a6a;
+}
+/* Contrast — maximum legibility */
+html[data-theme="contrast"]{
+  --bg:#000; --surface:#0b0b0b; --surface-2:#000; --raised:#141414;
+  --border:#5a5a5a; --border-soft:#333;
+  --text:#fff; --text-dim:#cfcfcf; --text-faint:#9a9a9a;
+  --accent:#ffd400; --accent-ink:#000; --accent-soft:#332b00;
+  --link:#7fd4ff;
+  --weak:#ff6a4d; --review:#ffd400; --mastered:#3ee08f;
+  --good:#3ee08f; --bad:#ff6a4d;
+  --shadow:0 0 0 1px #5a5a5a;
+}
+
+/* swatch colours (mirror each theme's accent) */
+.sw[data-t="nephron"]{background:#e6b54a}
+.sw[data-t="night"]{background:#57c7e8}
+.sw[data-t="paper"]{background:#9a5a2b}
+.sw[data-t="cortex"]{background:#e79aa8}
+.sw[data-t="contrast"]{background:linear-gradient(135deg,#000 50%,#fff 50%)}

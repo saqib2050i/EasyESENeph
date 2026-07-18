@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="nephron">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nephron — ESENeph Study Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<!-- Styles: tokens first, then components -->
+<link rel="stylesheet" href="./assets/css/themes.css" />
+<link rel="stylesheet" href="./assets/css/app.css" />
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <span class="mark">Ne</span>
+      <div>
+        <span class="name">Nephron</span>
+        <span class="sub">ESENeph Deck</span>
+      </div>
+    </div>
+    <nav class="nav" id="nav" aria-label="Views">
+      <button data-view="dashboard" class="on" aria-current="page"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</button>
+      <button data-view="flashcards"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Flashcards<span class="ct" id="ct-cards">0</span></button>
+      <button data-view="highyield"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>High-Yield</button>
+      <button data-view="topics"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Topics<span class="ct" id="ct-topics">0</span></button>
+      <button data-view="load"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Load Data</button>
+    </nav>
+    <div class="side-foot">
+      <button class="signout" id="signout" hidden>Sign out</button>
+      <div class="theme-label">Theme</div>
+      <div class="swatches" id="swatches" role="group" aria-label="Colour theme">
+        <button class="sw on" data-t="nephron" title="Nephron" aria-label="Nephron theme" aria-pressed="true"></button>
+        <button class="sw" data-t="night" title="Night" aria-label="Night theme" aria-pressed="false"></button>
+        <button class="sw" data-t="paper" title="Paper" aria-label="Paper theme" aria-pressed="false"></button>
+        <button class="sw" data-t="cortex" title="Cortex" aria-label="Cortex theme" aria-pressed="false"></button>
+        <button class="sw" data-t="contrast" title="Contrast" aria-label="Contrast theme" aria-pressed="false"></button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" id="main"><!-- views render here --></main>
+</div>
+
+<input type="file" id="fileinput" accept="application/json,.json" style="display:none" />
+
+<!-- Scripts load as classic (non-module) files in dependency order so
+     the app also runs from file:// with no build step. Helpers first,
+     then state, srs, the views, and finally the orchestrator. -->
+<script src="./assets/js/store.js"></script>
+<script src="./assets/js/markdown.js"></script>
+<script src="./assets/js/embedded.js"></script>
+<script src="./assets/js/state.js"></script>
+<script src="./assets/js/srs.js"></script>
+<script src="./assets/js/merge.js"></script>
+<script src="./assets/js/prompt.js"></script>
+<script src="./assets/js/views/dashboard.js"></script>
+<script src="./assets/js/views/flashcards.js"></script>
+<script src="./assets/js/views/highyield.js"></script>
+<script src="./assets/js/views/topics.js"></script>
+<script src="./assets/js/views/load.js"></script>
+<script src="./assets/js/app.js"></script>
+</body>
+</html>
