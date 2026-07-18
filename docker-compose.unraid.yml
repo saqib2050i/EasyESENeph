@@ -1,21 +1,19 @@
 # Deploy on Unraid (or any host) by PULLING the prebuilt image from GHCR —
-# no local build. All values come from a .env file in this same folder
-# (see .env.example). The image is public, so no docker login is needed.
+# no local build. Set AUTH_USER, AUTH_PASSWORD and DATA_DIR in a .env file in
+# this same folder (see .env.example). The image is public — no login needed.
 #
 #   docker compose -f docker-compose.unraid.yml pull
 #   docker compose -f docker-compose.unraid.yml up -d
 
 services:
   nephron:
-    image: ${NEPHRON_IMAGE}
+    image: ghcr.io/saqib2050i/easyeseneph:latest
     container_name: nephron-study
     ports:
       - "8973:8973"                       # point your Cloudflare tunnel at http://<unraid-ip>:8973
     environment:
-      - DATA_PATH=/data/data.json
-      - PORT=8973
-      - AUTH_USER=${AUTH_USER}
-      - AUTH_PASSWORD=${AUTH_PASSWORD}
+      - AUTH_USER=${AUTH_USER}            # login username
+      - AUTH_PASSWORD=${AUTH_PASSWORD}    # login password
     volumes:
       - ${DATA_DIR}:/data                 # host folder for the deck + auth secrets (e.g. your appdata)
     restart: unless-stopped
