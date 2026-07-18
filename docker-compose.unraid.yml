@@ -10,12 +10,12 @@ services:
     image: ${NEPHRON_IMAGE}
     container_name: nephron-study
     ports:
-      - "8973:8973"                       # point your existing Cloudflare tunnel at http://<unraid-ip>:8973
+      - "8973:8973"                       # point your Cloudflare tunnel at http://<unraid-ip>:8973
     environment:
       - DATA_PATH=/data/data.json
       - PORT=8973
       - AUTH_USER=${AUTH_USER}
       - AUTH_PASSWORD=${AUTH_PASSWORD}
     volumes:
-      - ./data:/data                      # persists the deck + auth secrets on the host
+      - ${DATA_DIR}:/data                 # host folder for the deck + auth secrets (e.g. your appdata)
     restart: unless-stopped
