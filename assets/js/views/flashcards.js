@@ -24,8 +24,8 @@ function renderFlashcards(){
     stage = `
       <div class="flash ${flipped?'flip':''}" id="flash" tabindex="0" role="button" aria-label="Flashcard, activate to flip">
         <div class="flash-inner">
-          <div class="face front"><span class="side-lbl">Question</span><div class="tag">${esc(c._domain)}</div><div class="content">${md(c.front)}</div><div class="foot">${tags}</div></div>
-          <div class="face back"><span class="side-lbl">Answer</span><div class="tag">${esc(c._topic)}</div><div class="content">${md(c.back)}</div><div class="foot">${tags}</div></div>
+          <div class="face front"><span class="side-lbl">Question</span><div class="content">${md(c.front)}</div></div>
+          <div class="face back"><span class="side-lbl">Answer</span><div class="content">${md(c.back)}</div><div class="foot"><span class="t topic">${esc(c._topic)}</span><span class="t">${esc(c._domain)}</span>${tags}</div></div>
         </div>
       </div>
       ${flipped?`<div class="grade-row">

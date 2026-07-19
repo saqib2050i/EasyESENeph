@@ -130,6 +130,7 @@ a{color:var(--link);text-decoration:none}
 .face.back .content{font-size:18px;line-height:1.5}
 .face .foot{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
 .face .foot .t{background:var(--surface-2);padding:2px 8px;border-radius:20px}
+.face .foot .t.topic{color:var(--accent);background:var(--accent-soft)}
 
 .grade-row{display:flex;gap:10px;width:min(640px,100%)}
 .grade{flex:1;padding:13px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-ui);font-weight:600;font-size:14px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:3px}
