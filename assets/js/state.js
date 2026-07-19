@@ -14,6 +14,8 @@ let pendingImport = null;        // staged { raw, incoming?, summary, errors, wa
 let backend = false;             // true when the API (/api/*) is reachable
 let authRequired = false;        // true when the server gates data behind a login
 let authed = false;              // true when this browser holds a valid session
+let kbSelected = null;           // knowledge-base article id being read (null = list)
+let kbSearch = '';               // knowledge-base search query
 
 const STATUS_ORDER = { weak:0, review:1, mastered:2 };
 /* Guarded lookup so an unknown/missing status sorts last instead of
@@ -22,10 +24,31 @@ function statusRank(s){ return STATUS_ORDER[s] ?? 99; }
 function statusColor(s){ return s==='weak' ? 'var(--weak)' : s==='mastered' ? 'var(--mastered)' : 'var(--review)'; }
 
 /* ---- derived selectors ---- */
+const kb = () => DATA.knowledgeBase || [];
+const kbById = id => kb().find(a => a.id === id) || null;
+/* MCQ topics that have no knowledge-base article pointing at them. */
+function topicsWithoutKb(){
+  const covered = new Set();
+  kb().forEach(a => (a.links?.topics || []).forEach(id => covered.add(id)));
+  return DATA.topics.filter(t => !covered.has(t.id));
+}
+/* Knowledge-base articles whose links.topics include this topic id. */
+function kbForTopic(id){ return kb().filter(a => (a.links?.topics || []).includes(id)); }
+
+function _cardKey(front){ return String(front || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); }
+
+/* All flashcards from MCQ topics AND knowledge-base articles, de-duplicated
+   by question text (topic cards win, so KB never duplicates an MCQ card). */
 function allCards(){
-  const out = [];
-  DATA.topics.forEach(t => (t.flashcards||[]).forEach(c =>
-    out.push({ ...c, _topic:t.title, _domain:t.domain, _status:t.status })));
+  const out = [], seen = new Set();
+  const add = (c, meta) => {
+    const k = _cardKey(c.front);
+    if(!c.front || !k || seen.has(k)) return;
+    seen.add(k);
+    out.push({ ...c, ...meta });
+  };
+  DATA.topics.forEach(t => (t.flashcards||[]).forEach(c => add(c, { _topic:t.title, _domain:t.domain, _status:t.status })));
+  kb().forEach(a => (a.flashcards||[]).forEach(c => add(c, { _topic:a.title, _domain:a.domain, _status:'review', _kb:a.id })));
   return out;
 }
 

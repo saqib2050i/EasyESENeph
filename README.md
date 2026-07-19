@@ -97,8 +97,9 @@ Nothing needs internet except web-fonts, which degrade gracefully to system font
 - **Dashboard** — accuracy per curriculum domain (the matrix), overall stats, an accuracy-over-time trend, and a "focus next" list sorted weak-first. "MCQs logged" reflects the actual attempts recorded in your deck.
 - **Flashcards** — filter by domain/status; weak cards surface first; grade with **1 / 2 / 3** (or click), **Space** to flip. A box read-out shows how the deck is spread across the Leitner boxes; grades persist via a lightweight Leitner box.
 - **High-yield** — every learning point on one page, grouped by domain. Hit **Print / save as PDF** for a clean last-minute sheet.
-- **Topics** — full explainers, pitfalls, and the MCQ encounters that generated each topic. Searchable.
-- **Load Data** — the data hub: see the active deck and its sources, **ingest** a JSON batch (with a preview of exactly what will change before it saves), **export** `data.json`, **reload from the server file**, and **copy the LLM prompt** used to generate a batch.
+- **Topics** — full explainers, pitfalls, and the MCQ encounters that generated each topic. Searchable. Links out to the matching knowledge-base article.
+- **Knowledge** — a knowledge base of didactic topic notes (definition, features, guideline-based investigations, management), independent of the MCQ scenarios. Articles use markdown tables, cross-link to each other (`[[wikilinks]]`) and to the MCQs that use them, generate non-duplicate flashcards, and print to PDF. Generate them with the **Copy KB prompt** button on Load Data.
+- **Load Data** — the data hub: see the active deck and its sources, **ingest** a JSON batch (with a preview of exactly what will change before it saves), **export** `data.json`, **reload from the server file**, and **copy** either the MCQ-ingest prompt or the knowledge-base prompt.
 - **Theme** — five palettes (Nephron / Night / Paper / Cortex / Contrast), bottom-left, remembered across sessions.
 
 ## Notes

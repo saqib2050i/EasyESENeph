@@ -9,8 +9,16 @@ const VIEWS = {
   flashcards: { render: renderFlashcards, bind: bindFlashcards },
   highyield:  { render: renderHighYield,  bind: bindHighYield  },
   topics:     { render: renderTopics,     bind: bindTopics     },
+  knowledge:  { render: renderKnowledge,  bind: bindKnowledge  },
   load:       { render: renderLoad,        bind: bindLoad       }
 };
+
+/* Open a knowledge-base article (from a nav click, a [[wikilink]], or a
+   related-article chip). */
+function gotoKb(id){
+  kbSelected = id;
+  switchView('knowledge');
+}
 
 function paint(){
   const v = VIEWS[VIEW] || VIEWS.dashboard;
@@ -18,6 +26,7 @@ function paint(){
   if(v.bind) v.bind();
   document.getElementById('ct-cards').textContent  = allCards().length;
   document.getElementById('ct-topics').textContent = DATA.topics.length;
+  document.getElementById('ct-kb').textContent     = kb().length;
 }
 
 function switchView(v){
@@ -53,14 +62,20 @@ function gotoTopic(id){
 
 function validateDeckClient(j){
   const e = [];
-  if(!j || typeof j !== 'object' || Array.isArray(j)) e.push('Top level must be a JSON object with a "topics" array.');
-  else if(!Array.isArray(j.topics) || !j.topics.length) e.push('"topics" must be a non-empty array.');
-  else j.topics.forEach((t,i) => { if(!t || typeof t.id !== 'string' || !t.id.trim()) e.push(`topics[${i}] needs a non-empty string "id".`); });
+  if(!j || typeof j !== 'object' || Array.isArray(j)){ e.push('Top level must be a JSON object.'); return e; }
+  const hasTopics = Array.isArray(j.topics) && j.topics.length;
+  const hasKb = Array.isArray(j.knowledgeBase) && j.knowledgeBase.length;
+  if(!hasTopics && !hasKb) e.push('Need a non-empty "topics" array and/or a "knowledgeBase" array.');
+  (j.topics || []).forEach((t,i) => { if(!t || typeof t.id !== 'string' || !t.id.trim()) e.push(`topics[${i}] needs a non-empty string "id".`); });
+  (j.knowledgeBase || []).forEach((a,i) => { if(!a || typeof a.id !== 'string' || !a.id.trim()) e.push(`knowledgeBase[${i}] needs a non-empty string "id".`); });
   return e;
 }
 
 function summaryText(s){
-  return s ? `${s.topicsAdded} new, ${s.topicsUpdated} updated, ${s.encountersAdded} attempt(s), ${s.cardsAdded} card(s).` : '';
+  if(!s) return '';
+  let t = `${s.topicsAdded} new, ${s.topicsUpdated} updated, ${s.encountersAdded} attempt(s), ${s.cardsAdded} card(s)`;
+  if(s.kbAdded || s.kbUpdated) t += `; ${s.kbAdded} new article(s), ${s.kbUpdated} updated`;
+  return t + '.';
 }
 
 async function apiPost(path, raw){
@@ -181,6 +196,11 @@ function wireChrome(){
     if(e.target.files[0]) readFile(e.target.files[0]);
   });
   document.getElementById('signout').addEventListener('click', logout);
+  // Any [data-kb] trigger (wikilinks, related chips, "read full topic") opens the article.
+  document.getElementById('main').addEventListener('click', e => {
+    const kbl = e.target.closest('[data-kb]');
+    if(kbl){ e.preventDefault(); gotoKb(kbl.dataset.kb); }
+  });
   document.addEventListener('keydown', e => {
     if(VIEW !== 'flashcards' || !deck.length || deckPos >= deck.length) return;
     const tag = (e.target.tagName || '').toLowerCase();

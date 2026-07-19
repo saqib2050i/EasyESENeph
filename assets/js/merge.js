@@ -71,11 +71,41 @@ function _mergeTopic(base, inc){
   return { encAdded, cardsAdded };
 }
 
+/* ---- knowledge-base articles ---- */
+function normalizeArticle(a){
+  a.sections = a.sections || [];
+  a.keyPoints = a.keyPoints || [];
+  a.flashcards = a.flashcards || [];
+  a.references = a.references || [];
+  a.aliases = a.aliases || [];
+  a.links = a.links || {};
+  a.links.topics = a.links.topics || [];
+  a.links.kb = a.links.kb || [];
+  return a;
+}
+function _mergeArticle(base, inc){
+  normalizeArticle(base);
+  // Replace scalar/whole-section content when the incoming article provides it.
+  ['title','domain','subtitle','summary','guideline','lastUpdated'].forEach(k => { if(inc[k] != null && inc[k] !== '') base[k] = inc[k]; });
+  ['sections','keyPoints','references','aliases'].forEach(k => { if(Array.isArray(inc[k]) && inc[k].length) base[k] = inc[k]; });
+  if(inc.links){
+    base.links.topics = [...new Set([...(base.links.topics||[]), ...(inc.links.topics||[])])];
+    base.links.kb     = [...new Set([...(base.links.kb||[]),     ...(inc.links.kb||[])])];
+  }
+  // Flashcards: merge by id.
+  const byId = new Map((base.flashcards||[]).map(c => [c.id, c]));
+  (inc.flashcards || []).forEach(c => {
+    if(!c || !c.id) return;
+    if(byId.has(c.id)) Object.assign(byId.get(c.id), c);
+    else { base.flashcards.push(c); byId.set(c.id, c); }
+  });
+}
+
 function mergeDecks(base, incoming){
   const deck = JSON.parse(JSON.stringify(base || { meta:{}, topics:[] }));
   deck.meta = deck.meta || {};
   deck.topics = deck.topics || [];
-  const summary = { topicsAdded:0, topicsUpdated:0, encountersAdded:0, cardsAdded:0, sourcesAdded:0 };
+  const summary = { topicsAdded:0, topicsUpdated:0, encountersAdded:0, cardsAdded:0, sourcesAdded:0, kbAdded:0, kbUpdated:0 };
   const byId = new Map(deck.topics.map(t => [t.id, t]));
 
   (incoming.topics || []).forEach(inc => {
@@ -93,6 +123,21 @@ function mergeDecks(base, incoming){
       summary.cardsAdded += t.flashcards.length;
     }
   });
+
+  // Knowledge base: merge articles by id (add or update in place).
+  if(Array.isArray(incoming.knowledgeBase)){
+    deck.knowledgeBase = deck.knowledgeBase || [];
+    const kbId = new Map(deck.knowledgeBase.map(a => [a.id, a]));
+    incoming.knowledgeBase.forEach(inc => {
+      if(!inc || !inc.id) return;
+      if(kbId.has(inc.id)){ _mergeArticle(kbId.get(inc.id), inc); summary.kbUpdated++; }
+      else{
+        const a = normalizeArticle(JSON.parse(JSON.stringify(inc)));
+        deck.knowledgeBase.push(a); kbId.set(a.id, a);
+        summary.kbAdded++;
+      }
+    });
+  }
 
   // Meta: keep identity, advance date, union sources, recompute totals.
   const im = incoming.meta || {};

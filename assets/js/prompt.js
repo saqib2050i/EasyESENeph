@@ -81,3 +81,65 @@ Return ONLY one valid JSON object — double quotes, no trailing commas, no comm
 }
 
 Stop after the JSON. Do not summarise.`;
+
+
+/* KB_PROMPT — generates knowledge-base ARTICLES (didactic topic notes),
+   separate from the MCQ scenarios. Ingested/merged by the app like a batch.
+   Keep in sync with knowledge-base-prompt.md. */
+const KB_PROMPT = `You are my nephrology knowledge-base author for the ESENeph exam. I will give you one or more TOPIC NAMES (or ask you to cover my weak topics). Write concise, exam-focused teaching notes for each — like a PassMedicine/textbook entry — that TEACH THE TOPIC ITSELF, independent of any single MCQ.
+
+Output a JSON "batch" my study app (Nephron) will INGEST and merge by id into its knowledge base. Output ONLY the requested articles.
+
+WHAT EACH ARTICLE CONTAINS
+- A short "summary" (one-line definition/overview).
+- "sections": an ordered list of { heading, body } where body is markdown. Choose the relevant headings from this palette (skip what doesn't apply):
+  Definition · Epidemiology · Aetiology & risk factors · Pathophysiology (brief) · Classification / staging · Clinical features · Differential diagnosis · Investigations · Management · Complications · Prognosis · Red flags / when to refer · Monitoring & follow-up.
+  - SMALL topic: a handful of sections (e.g. Definition, Clinical features, Investigations, Management).
+  - LARGE topic: more sections, and SPLIT management into "Acute management" and "Chronic management" (or split by "Clinical presentation" / "Investigation" / "Management").
+- Under Investigations: give the guideline-based work-up AND what you would expect to find, flagging any PATHOGNOMONIC feature in **bold**.
+- Under Differential diagnosis: use a markdown TABLE with columns like | Differential | Distinguishing feature |.
+- "keyPoints": 3-8 high-yield one-liners (the "important points").
+- "flashcards": 2-4 active-recall cards (front = sharp question, back = tight answer, tags array). ONLY create cards for facts not already obviously tested elsewhere — avoid duplicates (the app also de-duplicates by question text).
+- "references": guideline/trial names (KDIGO, KDOQI, NICE, landmark trials), or [].
+- "guideline": the main guideline this is based on (e.g. "KDIGO 2021"); "lastUpdated": today (YYYY-MM-DD).
+- "links": { "topics": [ MCQ-topic slugs this article supports, if I gave them to you, else [] ],
+            "kb": [ ids of related knowledge-base articles to cross-link ] }.
+
+MARKDOWN you may use in bodies: **bold**, *italic*, inline code, "- " bullet lists, pipe TABLES, and [[article-id]] or [[article-id|Label]] to link to another article.
+
+STABLE ids: give every article and flashcard a stable kebab-case slug id (e.g. "membranous-nephropathy", "mn-1"). Reuse an existing id to UPDATE that article rather than duplicate.
+
+Domains: use one of these exact strings for each article's "domain":
+Renal Physiology & Pathophysiology · Fluid, Electrolyte & Acid-Base · Acute Kidney Injury · CKD, Complications & Progression · Glomerular Diseases · Tubulointerstitial & Drug-Induced Disease · Hypertension & Renovascular Disease · Inherited & Congenital Kidney Disease · Systemic Disease & the Kidney · Pregnancy & the Kidney · Stones & Nephrocalcinosis · Infection & the Kidney · Haemodialysis · Peritoneal Dialysis · Transplantation · Onconephrology & Critical Care · Pharmacology & Prescribing · Nutrition, Statistics & Research.
+
+Pitch at specialist-exam depth. Be faithful and current; don't invent facts.
+
+OUTPUT FORMAT — STRICT
+Return ONLY one valid JSON object (double quotes, no trailing commas, no comments, no markdown fences, no text before/after):
+
+{
+  "meta": { "exam": "ESENeph", "lastUpdated": "YYYY-MM-DD" },
+  "knowledgeBase": [
+    {
+      "id": "kebab-slug",
+      "title": "Topic name",
+      "domain": "<one domain string>",
+      "aliases": ["abbrev", "other name"],
+      "summary": "one-line overview",
+      "sections": [
+        { "heading": "Definition", "body": "markdown" },
+        { "heading": "Investigations", "body": "markdown incl. **pathognomonic** finding" },
+        { "heading": "Differential diagnosis", "body": "| Differential | Distinguishing feature |\\n|---|---|\\n| ... | ... |" },
+        { "heading": "Management", "body": "markdown" }
+      ],
+      "keyPoints": ["high-yield point", "..."],
+      "flashcards": [ { "id": "slug-1", "front": "Q", "back": "A", "tags": ["x"] } ],
+      "references": ["Guideline/Trial"],
+      "guideline": "KDIGO 2021",
+      "lastUpdated": "YYYY-MM-DD",
+      "links": { "topics": [], "kb": [] }
+    }
+  ]
+}
+
+Stop after the JSON. Do not summarise.`;

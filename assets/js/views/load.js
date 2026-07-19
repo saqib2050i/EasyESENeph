@@ -46,6 +46,13 @@ function renderLoad(){
     <div class="hint">Copy this, paste it into a fresh chat with an LLM, and attach your MCQ PDF/DOCX. It returns the batch JSON to ingest above.</div>
     <div class="btn-row"><button class="btn primary" id="copyprompt">Copy prompt</button><span class="copied" id="copied" hidden>Copied ✓</span></div>
     <pre class="promptbox" id="promptbox">${esc(INGEST_PROMPT)}</pre>
+  </div>
+
+  <div class="panel">
+    <h2>Prompt for knowledge-base articles</h2>
+    <div class="hint">Give an LLM this prompt plus one or more topic names to generate teaching articles for the <strong>Knowledge</strong> tab. Ingest the JSON the same way as above.</div>
+    <div class="btn-row"><button class="btn primary" id="copykbprompt">Copy KB prompt</button><span class="copied" id="copied-kb" hidden>Copied ✓</span></div>
+    <pre class="promptbox" id="kbpromptbox">${esc(KB_PROMPT)}</pre>
   </div>`;
 }
 
@@ -69,6 +76,7 @@ function renderImportResult(){
       <span class="ic-chip upd">${s.topicsUpdated} updated</span>
       <span class="ic-chip">${plural(s.encountersAdded,'new MCQ attempt')}</span>
       <span class="ic-chip">${plural(s.cardsAdded,'new card')}</span>
+      ${(s.kbAdded||s.kbUpdated)?`<span class="ic-chip add">${plural(s.kbAdded,'new article')}</span><span class="ic-chip upd">${s.kbUpdated||0} article(s) updated</span>`:''}
     </div>
     ${warn}
     <div class="btn-row">
@@ -103,4 +111,6 @@ function bindLoad(){
   };
   const cp = document.getElementById('copyprompt');
   if(cp) cp.onclick = () => copyText(INGEST_PROMPT, 'copied');
+  const kp = document.getElementById('copykbprompt');
+  if(kp) kp.onclick = () => copyText(KB_PROMPT, 'copied-kb');
 }

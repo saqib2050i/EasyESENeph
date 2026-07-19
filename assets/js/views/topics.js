@@ -23,6 +23,7 @@ function renderTopics(){
         ${(t.pitfalls||[]).length?`<div class="subhead">Common traps</div><ul class="pitlist">${t.pitfalls.map(p=>`<li>${mdInline(p)}</li>`).join('')}</ul>`:''}
         ${enc?`<div class="subhead">MCQ encounters</div><div class="enc">${enc}</div>`:''}
         ${(t.references||[]).length?`<div class="refs">Refs: ${t.references.map(esc).join(' · ')}</div>`:''}
+        ${kbForTopic(t.id).map(a=>`<button class="btn kb-open" data-kb="${escAttr(a.id)}">📖 Read the full topic: ${esc(a.title)}</button>`).join('')}
       </div>
     </div>`;
   }).join('') || '<div class="empty">No topics match your search.</div>';

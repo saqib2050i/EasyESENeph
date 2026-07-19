@@ -27,12 +27,13 @@ by falling back to a client-side merge into `localStorage` — so both paths mus
 | `assets/js/srs.js` | Leitner deck: `srs`, `buildDeck`, `gradeCard`, `boxDistribution` | Yes |
 | `assets/js/merge.js` | **Client** ingest engine (no-backend fallback): pure `mergeDecks(base,incoming)→{deck,summary}` | Yes |
 | `assets/js/prompt.js` | `INGEST_PROMPT` — the copyable LLM prompt (mirror of `eseneph-processor-prompt.md`) | Yes |
-| `assets/js/views/*.js` | One file per view: `renderX()` + `bindX()` | Yes — add views here |
-| `assets/js/app.js` | Orchestrator: `VIEWS` registry, `paint`, router, boot, backend detection, API + client ingest, theme | Yes |
+| `assets/js/views/*.js` | One file per view: `renderX()` + `bindX()` (dashboard, flashcards, highyield, topics, **knowledge**, load) | Yes — add views here |
+| `assets/js/app.js` | Orchestrator: `VIEWS` registry, `paint`, router, boot, backend detection, API + client ingest, `gotoKb`, theme | Yes |
 | `server.py` | Backend: static serving + JSON API (`/api/deck\|validate\|ingest\|health`); atomic writes to `DATA_PATH` | Yes |
 | `merge_engine.py` | **Server** merge + validation — must mirror `merge.js` (+ `validate_payload`) | Yes |
 | `data.json` | The live deck / seed. **Source of truth for content.** On deploy it lives on the `/data` volume. | Rarely — user data, not code |
-| `eseneph-processor-prompt.md` | Human copy of the prompt; defines the schema | Only alongside a schema change |
+| `eseneph-processor-prompt.md` | Human copy of the MCQ-ingest prompt (mirrors `prompt.js` `INGEST_PROMPT`) | Only alongside a schema change |
+| `knowledge-base-prompt.md` | Human copy of the KB-article prompt (mirrors `prompt.js` `KB_PROMPT`) | Only alongside a schema change |
 | `Dockerfile` / `.dockerignore` | Builds the server image (python:3.12-slim, stdlib only) | Yes if deployment changes |
 | `docker-compose.yml` | Builds + runs the server on port 8973, mounts `./data:/data` | Yes if deployment changes |
 | `README.md` | Human-facing overview + deploy guide | Keep in sync with behaviour changes |
@@ -54,9 +55,18 @@ topic:  { id, title, domain, subtopic,
           highYield: [string], explainer: markdown-string, pitfalls: [string],
           flashcards: [{ id, front, back, tags:[string] }],
           references: [string] }
+kbArticle: { id, title, domain, aliases:[string], summary: markdown,
+          sections: [{ heading, body: markdown }],   // ordered; small→few, large→split Acute/Chronic mgmt
+          keyPoints: [string], flashcards: [{ id, front, back, tags }],
+          references: [string], guideline, lastUpdated,
+          links: { topics:[topicId], kb:[kbId] } }   // articles live in deck.knowledgeBase[]
 ```
-`id` (topic) and flashcard `id` are **stable slugs** — the prompt merges batches by matching them.
-Never regenerate or renumber existing ids in a way that would break that merge.
+`id` (topic, flashcard, kbArticle) values are **stable slugs** — the merge engines match batches by them.
+Never regenerate or renumber existing ids in a way that would break that merge. The **knowledge base**
+(`deck.knowledgeBase`) is didactic notes, merged by id independently of `topics`; a batch may contain
+`topics`, `knowledgeBase`, or both. `allCards()` gathers flashcards from both and **de-dupes by question
+text** (topic cards win) so KB cards never duplicate an MCQ card. Markdown (`md()`) supports pipe tables
+and `[[kb-id|label]]` links (opened via `gotoKb`); the Knowledge view (`views/knowledge.js`) is the reader.
 
 ## Architecture & invariants
 - **Split static front end + stdlib backend, no build step.** CSS in `assets/css/`, JS in `assets/js/`, wired via ordered `<link>`/`<script>` tags. `server.py` serves them plus the API. Do **not** add a bundler, npm deps, a JS framework, or a third-party **Python** package without asking — the server must stay `python server.py` on a bare `python:slim` image.

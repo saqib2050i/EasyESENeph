@@ -459,5 +459,148 @@
         "PRESERVE trial NEJM 2018"
       ]
     }
+  ],
+  "knowledgeBase": [
+    {
+      "id": "membranous-nephropathy",
+      "title": "Membranous nephropathy",
+      "domain": "Glomerular Diseases",
+      "aliases": [
+        "MN",
+        "PLA2R nephropathy",
+        "membranous glomerulonephritis"
+      ],
+      "summary": "Immune-complex podocytopathy and a leading cause of [[nephrotic-syndrome]] in adults; anti-PLA2R antibody positive in most primary cases.",
+      "sections": [
+        {
+          "heading": "Definition",
+          "body": "An immune-complex glomerulopathy with **subepithelial** deposits and diffuse thickening of the glomerular basement membrane. *Primary* (autoimmune, antibody-mediated) in ~80%; *secondary* to malignancy, infection (hepatitis B), drugs (NSAIDs), or lupus (class V)."
+        },
+        {
+          "heading": "Epidemiology",
+          "body": "Commonest cause of primary [[nephrotic-syndrome]] in older Caucasian adults; peak 5th–6th decade; M>F."
+        },
+        {
+          "heading": "Pathophysiology",
+          "body": "Autoantibodies against the podocyte antigen **M-type phospholipase A2 receptor (PLA2R)** — or THSD7A in a minority — form subepithelial immune complexes, activate complement, and damage podocytes → heavy proteinuria."
+        },
+        {
+          "heading": "Clinical features",
+          "body": "- Nephrotic syndrome: oedema, frothy urine, hypoalbuminaemia, hyperlipidaemia\n- Often normal or only mildly reduced eGFR at presentation\n- **Venous thromboembolism** risk is high (renal-vein thrombosis, PE) — highest of any glomerular disease"
+        },
+        {
+          "heading": "Differential diagnosis",
+          "body": "| Differential | Distinguishing feature |\n|---|---|\n| Minimal change disease | Younger, abrupt onset, normal light microscopy, steroid-responsive |\n| FSGS | Segmental sclerosis, may have reduced eGFR/hypertension |\n| Diabetic nephropathy | Diabetes + retinopathy, nodular glomerulosclerosis |\n| Amyloidosis | Organomegaly, Congo-red apple-green birefringence |"
+        },
+        {
+          "heading": "Investigations",
+          "body": "- **Serum anti-PLA2R antibody** — positive in ~70–80% of primary MN; titre tracks activity and predicts remission\n- Urine PCR/ACR and 24-h protein; serum albumin; lipids\n- Complement (usually normal in primary), hepatitis B/C, ANA, and age-appropriate malignancy screen for secondary causes\n- **Renal biopsy**: subepithelial deposits with a **spike-and-dome** appearance on silver stain and granular IgG/C3 on immunofluorescence is the *pathognomonic* pattern"
+        },
+        {
+          "heading": "Classification / KDIGO risk",
+          "body": "Risk of progression is stratified **low / moderate / high / very-high** using eGFR, proteinuria, serum albumin, anti-PLA2R titre, and the proteinuria response to 6 months of ACEi/ARB. Low-risk = normal eGFR, proteinuria <3.5 g/d, albumin >30 g/L."
+        },
+        {
+          "heading": "Management — conservative",
+          "body": "**All patients**: RAS blockade (ACEi/ARB), BP control, statin, dietary sodium restriction, diuretics for oedema, and anticoagulation if albumin is very low (high VTE risk). **Low-risk disease is managed conservatively for up to 6 months** — many remit spontaneously."
+        },
+        {
+          "heading": "Management — immunosuppression",
+          "body": "Reserved for **moderate/high/very-high risk** or deterioration: **rituximab** (first-line for many), the **Ponticelli regimen** (cyclophosphamide + corticosteroid, alternating), or a **calcineurin inhibitor**. Treat any identified secondary cause."
+        },
+        {
+          "heading": "Complications",
+          "body": "VTE (renal vein thrombosis, PE), progressive CKD, infection, accelerated atherosclerosis."
+        }
+      ],
+      "keyPoints": [
+        "Anti-PLA2R antibody = primary MN in ~70–80%; titre guides treatment and predicts remission.",
+        "Highest VTE risk of any glomerular disease — anticoagulate if albumin very low.",
+        "Low-risk MN → conservative therapy (ACEi/ARB) for up to 6 months before immunosuppression.",
+        "Immunosuppression = rituximab, Ponticelli (cyclophosphamide + steroid), or a CNI.",
+        "Always screen for secondary causes (malignancy, hepatitis B, SLE, NSAIDs)."
+      ],
+      "flashcards": [
+        {
+          "id": "mn-kb-1",
+          "front": "Which glomerular disease carries the highest risk of venous thromboembolism?",
+          "back": "Membranous nephropathy (especially with very low serum albumin).",
+          "tags": [
+            "membranous",
+            "VTE"
+          ]
+        }
+      ],
+      "references": [
+        "KDIGO 2021 Glomerular Diseases"
+      ],
+      "guideline": "KDIGO 2021",
+      "lastUpdated": "2026-07-19",
+      "links": {
+        "topics": [
+          "membranous-pla2r"
+        ],
+        "kb": [
+          "nephrotic-syndrome"
+        ]
+      }
+    },
+    {
+      "id": "nephrotic-syndrome",
+      "title": "Nephrotic syndrome",
+      "domain": "Glomerular Diseases",
+      "aliases": [
+        "nephrosis"
+      ],
+      "summary": "The triad of heavy proteinuria (>3.5 g/day), hypoalbuminaemia and oedema; see [[membranous-nephropathy]] as a leading adult cause.",
+      "sections": [
+        {
+          "heading": "Definition",
+          "body": "**Proteinuria >3.5 g/24h** (or PCR >350 mg/mmol) + **hypoalbuminaemia (<30 g/L)** + **oedema**, usually with hyperlipidaemia."
+        },
+        {
+          "heading": "Clinical features",
+          "body": "Periorbital and dependent oedema, frothy urine, weight gain; may present with a complication (VTE, infection)."
+        },
+        {
+          "heading": "Investigations",
+          "body": "Quantify proteinuria (PCR/ACR, 24-h), serum albumin and lipids, renal function, and a cause work-up (glucose/HbA1c, anti-PLA2R, complement, hepatitis serology, myeloma screen). **Renal biopsy** in adults to define the lesion."
+        },
+        {
+          "heading": "Complications",
+          "body": "- **Thromboembolism** (loss of antithrombin III) — renal-vein thrombosis, PE\n- **Infection** (loss of immunoglobulin/complement) — encapsulated organisms\n- Hyperlipidaemia and accelerated atherosclerosis\n- AKI (intravascular depletion or acute tubular injury)"
+        },
+        {
+          "heading": "Management",
+          "body": "Treat the underlying lesion; supportive care with **RAS blockade**, salt restriction and diuretics, statin, and **anticoagulation** when albumin is very low. Vaccinate against encapsulated organisms."
+        }
+      ],
+      "keyPoints": [
+        "Triad: proteinuria >3.5 g/d + hypoalbuminaemia + oedema.",
+        "Hypercoagulable (antithrombin III loss) — think renal-vein thrombosis/PE.",
+        "Commonest adult causes: membranous, FSGS, minimal change, diabetic nephropathy, amyloid."
+      ],
+      "flashcards": [
+        {
+          "id": "ns-kb-1",
+          "front": "Define nephrotic syndrome.",
+          "back": "Proteinuria >3.5 g/day + hypoalbuminaemia (<30 g/L) + oedema (± hyperlipidaemia).",
+          "tags": [
+            "nephrotic"
+          ]
+        }
+      ],
+      "references": [
+        "KDIGO 2021 Glomerular Diseases"
+      ],
+      "guideline": "KDIGO 2021",
+      "lastUpdated": "2026-07-19",
+      "links": {
+        "topics": [],
+        "kb": [
+          "membranous-nephropathy"
+        ]
+      }
+    }
   ]
 }

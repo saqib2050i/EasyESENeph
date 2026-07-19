@@ -117,12 +117,48 @@ def _merge_topic(base, inc):
     return enc_added, cards_added
 
 
+# ---------- knowledge-base articles ----------
+def normalize_article(a):
+    a.setdefault("sections", [])
+    a.setdefault("keyPoints", [])
+    a.setdefault("flashcards", [])
+    a.setdefault("references", [])
+    a.setdefault("aliases", [])
+    a.setdefault("links", {})
+    a["links"].setdefault("topics", [])
+    a["links"].setdefault("kb", [])
+    return a
+
+
+def _merge_article(base, inc):
+    normalize_article(base)
+    for k in ("title", "domain", "subtitle", "summary", "guideline", "lastUpdated"):
+        if inc.get(k) not in (None, ""):
+            base[k] = inc[k]
+    for k in ("sections", "keyPoints", "references", "aliases"):
+        if isinstance(inc.get(k), list) and inc[k]:
+            base[k] = inc[k]
+    if inc.get("links"):
+        base["links"]["topics"] = list(dict.fromkeys((base["links"].get("topics") or []) + (inc["links"].get("topics") or [])))
+        base["links"]["kb"] = list(dict.fromkeys((base["links"].get("kb") or []) + (inc["links"].get("kb") or [])))
+    cby = {c.get("id"): c for c in base.get("flashcards", [])}
+    for c in inc.get("flashcards", []):
+        if not c or not c.get("id"):
+            continue
+        if c["id"] in cby:
+            cby[c["id"]].update(c)
+        else:
+            base["flashcards"].append(c)
+            cby[c["id"]] = c
+
+
 def merge_decks(base, incoming):
     """Return (deck, summary). Does not mutate `base`."""
     deck = copy.deepcopy(base or {"meta": {}, "topics": []})
     deck.setdefault("meta", {})
     deck.setdefault("topics", [])
-    summary = {"topicsAdded": 0, "topicsUpdated": 0, "encountersAdded": 0, "cardsAdded": 0, "sourcesAdded": 0}
+    summary = {"topicsAdded": 0, "topicsUpdated": 0, "encountersAdded": 0, "cardsAdded": 0,
+               "sourcesAdded": 0, "kbAdded": 0, "kbUpdated": 0}
     by_id = {t["id"]: t for t in deck["topics"] if t.get("id")}
 
     for inc in incoming.get("topics", []):
@@ -140,6 +176,21 @@ def merge_decks(base, incoming):
             summary["topicsAdded"] += 1
             summary["encountersAdded"] += len(t["encounters"])
             summary["cardsAdded"] += len(t["flashcards"])
+
+    if isinstance(incoming.get("knowledgeBase"), list):
+        deck.setdefault("knowledgeBase", [])
+        kb_id = {a["id"]: a for a in deck["knowledgeBase"] if a.get("id")}
+        for inc in incoming["knowledgeBase"]:
+            if not inc or not inc.get("id"):
+                continue
+            if inc["id"] in kb_id:
+                _merge_article(kb_id[inc["id"]], inc)
+                summary["kbUpdated"] += 1
+            else:
+                a = normalize_article(copy.deepcopy(inc))
+                deck["knowledgeBase"].append(a)
+                kb_id[a["id"]] = a
+                summary["kbAdded"] += 1
 
     im = incoming.get("meta", {}) or {}
     deck["meta"]["exam"] = deck["meta"].get("exam") or im.get("exam") or "ESENeph"
@@ -176,9 +227,15 @@ def validate_payload(raw_text):
         return {"ok": False, "errors": ["Top level must be a JSON object with a \"topics\" array."], "warnings": [], "data": None}
 
     topics = data.get("topics")
-    if not isinstance(topics, list) or len(topics) == 0:
-        errors.append('"topics" must be a non-empty array.')
+    kb = data.get("knowledgeBase")
+    has_topics = isinstance(topics, list) and len(topics) > 0
+    has_kb = isinstance(kb, list) and len(kb) > 0
+    if not has_topics and not has_kb:
+        errors.append('Need a non-empty "topics" array and/or a "knowledgeBase" array.')
+    if topics is not None and not isinstance(topics, list):
+        errors.append('"topics" must be an array.')
         topics = []
+    topics = topics if isinstance(topics, list) else []
 
     ids = set()
     card_ids = set()
@@ -219,5 +276,40 @@ def validate_payload(raw_text):
                         warnings.append(f'Flashcard id "{c["id"]}" appears more than once.')
                     else:
                         card_ids.add(c["id"])
+
+    # knowledge-base articles (optional)
+    kb_ids = set()
+    for i, a in enumerate(kb if isinstance(kb, list) else []):
+        where = f"knowledgeBase[{i}]"
+        if not isinstance(a, dict):
+            errors.append(f"{where} must be an object.")
+            continue
+        aid = a.get("id")
+        label = aid if isinstance(aid, str) else where
+        if not isinstance(aid, str) or not aid.strip():
+            errors.append(f'{where} needs a non-empty string "id".')
+        elif aid in kb_ids:
+            errors.append(f'Duplicate knowledge-base id "{aid}".')
+        else:
+            kb_ids.add(aid)
+        for k in ("title", "domain"):
+            if not isinstance(a.get(k), str) or not a.get(k, "").strip():
+                errors.append(f'Article "{label}" needs a "{k}".')
+        dom = a.get("domain")
+        if isinstance(dom, str) and dom.strip() and dom not in TAXONOMY:
+            warnings.append(f'Article "{label}" domain "{dom}" is not in the taxonomy (it will still load).')
+        secs = a.get("sections")
+        if secs is not None:
+            if not isinstance(secs, list):
+                errors.append(f'Article "{label}".sections must be an array.')
+            else:
+                for j, s in enumerate(secs):
+                    if not isinstance(s, dict) or not isinstance(s.get("heading"), str) or not isinstance(s.get("body"), str):
+                        errors.append(f'Article "{label}".sections[{j}] needs "heading" and "body" strings.')
+        fc = a.get("flashcards")
+        if isinstance(fc, list):
+            for j, c in enumerate(fc):
+                if not isinstance(c, dict) or not isinstance(c.get("id"), str) or not c["id"].strip():
+                    errors.append(f'Article "{label}".flashcards[{j}] needs a string "id".')
 
     return {"ok": len(errors) == 0, "errors": errors, "warnings": warnings, "data": data}

@@ -24,3 +24,6 @@ scratchpad/
 
 # your personal deck (load it through the site after deploy)
 my-deck.json
+
+# stray nested clone created by GitHub Desktop
+EasyESENeph/
