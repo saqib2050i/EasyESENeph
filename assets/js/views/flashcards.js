@@ -1,60 +1,101 @@
-/* views/flashcards.js — active-recall deck with domain/status filters,
-   a Leitner box read-out, flip + grade. Weakest / most-due cards first. */
+/* views/flashcards.js — active-recall deck. Compact filter bar, a bounded
+   study round with a progress bar, flip + grade. The grade row is always
+   rendered (disabled until the card is flipped) so the layout never jumps
+   and the buttons never leave the screen. */
 
 function renderFlashcards(){
-  const domains = ['all', ...new Set(allCards().map(c => c._domain))];
-  const domChips = domains.map(d =>
-    `<button class="chip ${filterDomain===d?'on':''}" data-fd="${escAttr(d)}">${d==='all'?'All domains':esc(d)}</button>`).join('');
-  const statChips = ['all','weak','review','mastered'].map(s =>
-    `<button class="chip ${filterStatus===s?'on':''}" data-fs="${s}">${s==='all'?'Any status':s}</button>`).join('');
+  const pool = filteredCards();
+  const domains = [...new Set(allCards().map(c => c._domain))].sort();
+  const domOpts = ['all', ...domains].map(d =>
+    `<option value="${escAttr(d)}"${filterDomain===d?' selected':''}>${d==='all'?'All domains':esc(d)}</option>`).join('');
+  const statBtns = ['all','weak','review','mastered'].map(s =>
+    `<button class="seg-b" data-fs="${s}" aria-pressed="${filterStatus===s}">${s==='all'?'Any':s}</button>`).join('');
+  const sizeOpts = roundOptions(pool.length).map(n =>
+    `<option value="${n}"${n===roundSize?' selected':''}>${n===pool.length?`All (${n})`:`${n} cards`}</option>`).join('');
 
-  const boxes = boxDistribution();
-  const boxBar = deck.length ? `<div class="boxbar">${
-    boxes.map(b => `<span class="b ${b.box===0?'new':''}"><b>${b.count}</b> ${b.box===0?'still learning':'box '+b.box}</span>`).join('')
-  }</div>` : '';
+  const bar = `
+    <div class="fc-bar">
+      <select class="fc-sel" id="fdom" aria-label="Filter by domain">${domOpts}</select>
+      <div class="seg" role="group" aria-label="Filter by status">${statBtns}</div>
+      <label class="fc-round">Round
+        <select class="fc-sel accent" id="fsize" aria-label="Cards per round">${sizeOpts}</select>
+      </label>
+      <span class="fc-count">${pool.length} card${pool.length!==1?'s':''} in filter</span>
+    </div>`;
 
   let stage;
   if(!deck.length){
-    stage = `<div class="deck-done"><div class="big">No cards match this filter.</div><div>Load more MCQ batches or widen the filter.</div></div>`;
+    stage = `<div class="deck-done"><div class="big">No cards match this filter.</div>
+      <div>Load more MCQ batches or widen the filter.</div></div>`;
   }else if(deckPos >= deck.length){
-    stage = `<div class="deck-done"><div class="big">Deck complete — ${deck.length} cards reviewed.</div><div>Grades saved. Reshuffle to run it again.</div><br><button class="btn primary" id="reshuffle">Reshuffle deck</button></div>`;
+    const boxes = boxDistribution();
+    const solid = boxes.filter(b => b.box >= 3).reduce((n,b) => n + b.count, 0);
+    stage = `<div class="deck-done"><div class="big">Round complete — ${deck.length} card${deck.length!==1?'s':''}</div>
+      <div>${solid} card${solid!==1?'s':''} now sitting at box 3 or better. Grades are saved.</div>
+      <button class="btn primary" id="reshuffle">Start another round</button></div>`;
   }else{
     const c = deck[deckPos];
+    const pct = Math.round(deckPos / deck.length * 100);
     const tags = (c.tags||[]).map(x => `<span class="t">${esc(x)}</span>`).join('');
     stage = `
-      <div class="flash ${flipped?'flip':''}" id="flash" tabindex="0" role="button" aria-label="Flashcard, activate to flip">
+      <div class="fc-prog"><i style="width:${pct}%"></i></div>
+      <div class="fc-progtxt"><span>Card ${deckPos+1} of ${deck.length}</span><span>${deck.length-deckPos-1} left</span></div>
+      <div class="flash ${flipped?'flip':''}" id="flash" tabindex="0" role="button"
+           aria-label="Flashcard. Activate to reveal the answer.">
         <div class="flash-inner">
-          <div class="face front"><span class="side-lbl">Question</span><div class="content">${md(c.front)}</div></div>
-          <div class="face back"><span class="side-lbl">Answer</span><div class="content">${md(c.back)}</div><div class="foot"><span class="t topic">${esc(c._topic)}</span><span class="t">${esc(c._domain)}</span>${tags}</div></div>
+          <div class="face front"><span class="side-lbl">Question</span>
+            <div class="content">${md(c.front)}</div></div>
+          <div class="face back"><span class="side-lbl">Answer</span>
+            <div class="content">${md(c.back)}</div>
+            <div class="foot"><span class="t topic">${esc(c._topic)}</span><span class="t">${esc(c._domain)}</span>${tags}</div>
+          </div>
         </div>
       </div>
-      ${flipped?`<div class="grade-row">
-        <button class="grade again" data-g="0">Again<small>&lt; box 0</small></button>
-        <button class="grade good" data-g="1">Good<small>box +1</small></button>
-        <button class="grade easy" data-g="2">Easy<small>box +2</small></button>
-      </div>`:`<div class="flip-hint">Tap the card or press <kbd>Space</kbd> to reveal</div>`}
-      <div class="flip-hint">Card ${deckPos+1} of ${deck.length} · grade with <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></div>`;
+      <div class="grade-row">
+        <button class="grade again" data-g="0" ${flipped?'':'disabled'}><kbd>1</kbd>
+          <span class="g-lab">Missed it</span><small>see it again soon</small></button>
+        <button class="grade good" data-g="1" ${flipped?'':'disabled'}><kbd>2</kbd>
+          <span class="g-lab">Got it</span><small>see it later</small></button>
+        <button class="grade easy" data-g="2" ${flipped?'':'disabled'}><kbd>3</kbd>
+          <span class="g-lab">Easy</span><small>see it much later</small></button>
+      </div>
+      <div class="flip-hint">${flipped
+        ? 'Grade with <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd>'
+        : 'Click the card or press <kbd>Space</kbd> to reveal'}</div>`;
   }
 
   return `
-  <div class="viewhead"><div class="eyebrow">Active recall</div><h1>Flashcards</h1>
-    <p>Cards from your weakest topics surface first. Grades feed a lightweight Leitner box so shaky cards keep coming back.</p></div>
-  <div class="card-toolbar">${domChips}</div>
-  <div class="card-toolbar">${statChips}<span class="card-count">${deck.length} card${deck.length!=1?'s':''} in deck</span></div>
-  ${boxBar}
+  <div class="viewhead fc-head"><div class="eyebrow">Active recall</div><h1>Flashcards</h1>
+    <p>Each round is a shuffled mix, weighted towards your weakest topics. Grades feed a lightweight Leitner box so shaky cards keep coming back.</p></div>
+  ${bar}
   <div class="flash-stage">${stage}</div>`;
 }
 
 function bindFlashcards(){
-  document.querySelectorAll('[data-fd]').forEach(b => b.onclick = () => { filterDomain = b.dataset.fd; buildDeck(); paint(); });
-  document.querySelectorAll('[data-fs]').forEach(b => b.onclick = () => { filterStatus = b.dataset.fs; buildDeck(); paint(); });
+  const dom = document.getElementById('fdom');
+  if(dom) dom.onchange = () => { filterDomain = dom.value; buildDeck(); paint(); };
+
+  document.querySelectorAll('[data-fs]').forEach(b => b.onclick = () => {
+    filterStatus = b.dataset.fs; buildDeck(); paint();
+  });
+
+  const size = document.getElementById('fsize');
+  if(size) size.onchange = () => {
+    roundSize = +size.value; store.set('nephron-round', roundSize);
+    buildDeck(); paint();
+  };
+
   const f = document.getElementById('flash');
   if(f){
     const flip = () => { flipped = !flipped; paint(); };
     f.onclick = flip;
-    f.onkeydown = e => { if(e.key === 'Enter'){ e.preventDefault(); flip(); } };
+    f.onkeydown = e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); flip(); } };
   }
-  document.querySelectorAll('[data-g]').forEach(b => b.onclick = () => gradeCard(+b.dataset.g));
+
+  document.querySelectorAll('[data-g]').forEach(b => b.onclick = () => {
+    if(!b.disabled) gradeCard(+b.dataset.g);
+  });
+
   const rs = document.getElementById('reshuffle');
   if(rs) rs.onclick = () => { buildDeck(); paint(); };
 }

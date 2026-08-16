@@ -5,18 +5,63 @@
 
 const srs = store.get('nephron-srs') || {};   // cardId -> box
 
-/* Build the review deck from the current filters, due (low box) first,
-   then weak status first. Resets position. */
-function buildDeck(){
+/* Cards matching the current domain/status filters (the pool a round is
+   drawn from). Kept separate so the round-size options can size themselves. */
+function filteredCards(){
   let cards = allCards();
   if(filterDomain !== 'all') cards = cards.filter(c => c._domain === filterDomain);
   if(filterStatus !== 'all') cards = cards.filter(c => c._status === filterStatus);
-  cards.sort((a,b) => {
-    const ba = srs[a.id] ?? 0, bb = srs[b.id] ?? 0;
-    if(ba !== bb) return ba - bb;                 // low box (due) first
-    return statusRank(a._status) - statusRank(b._status);
+  return cards;
+}
+
+/* Round-size choices: multiples of 5 up to 30 that are *below* the pool
+   total, then "all". A pool of 27 gives 5,10,15,20,25,27; a pool of 4
+   gives just 4 — so we never offer a size the pool cannot fill. */
+function roundOptions(total){
+  const out = [];
+  for(let n = 5; n <= 30; n += 5) if(n < total) out.push(n);
+  out.push(total);
+  return out;
+}
+
+/* Fisher–Yates, so each round opens somewhere new. */
+function shuffle(a){
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* Build a study round: stratify by status, shuffle within each stratum
+   (due/low box first), then interleave 3 weak : 2 review : 1 mastered so
+   the round is a genuine mix that still leans on weak topics. */
+function buildDeck(){
+  const pool = filteredCards();
+  const opts = roundOptions(pool.length);
+  if(!opts.includes(roundSize)) roundSize = opts[0];   // filter shrank past the saved size
+  const take = Math.min(roundSize, pool.length);
+
+  const strata = { weak:[], review:[], mastered:[] };
+  pool.forEach(c => (strata[c._status] || strata.review).push(c));
+  Object.keys(strata).forEach(k => {
+    shuffle(strata[k]);
+    strata[k].sort((a,b) => (srs[a.id] ?? 0) - (srs[b.id] ?? 0));   // due first
   });
-  deck = cards; deckPos = 0; flipped = false;
+
+  const weights = { weak:3, review:2, mastered:1 };
+  const out = [];
+  while(out.length < take){
+    let moved = false;
+    for(const k of ['weak','review','mastered']){
+      for(let n = 0; n < weights[k] && out.length < take; n++){
+        if(strata[k].length){ out.push(strata[k].shift()); moved = true; }
+      }
+    }
+    if(!moved) break;                                  // every stratum drained
+  }
+
+  deck = out; deckPos = 0; flipped = false;
 }
 
 function gradeCard(g){

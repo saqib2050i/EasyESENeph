@@ -204,7 +204,7 @@ function wireChrome(){
   document.addEventListener('keydown', e => {
     if(VIEW !== 'flashcards' || !deck.length || deckPos >= deck.length) return;
     const tag = (e.target.tagName || '').toLowerCase();
-    if(tag === 'input' || tag === 'textarea') return;
+    if(tag === 'input' || tag === 'textarea' || tag === 'select') return;
     if(e.code === 'Space'){ e.preventDefault(); flipped = !flipped; paint(); }
     else if(flipped && ['1','2','3'].includes(e.key)) gradeCard(+e.key - 1);
   });
