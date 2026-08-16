@@ -37,6 +37,16 @@ function renderFlashcards(){
     const c = deck[deckPos];
     const pct = Math.round(deckPos / deck.length * 100);
     const tags = (c.tags||[]).map(x => `<span class="t">${esc(x)}</span>`).join('');
+    // Two independent signals: status is owned by MCQ attempts, strength is
+    // earned by revision. Neither overwrites the other.
+    const topic = c._topicId ? DATA.topics.find(t => t.id === c._topicId) : null;
+    const str = topic ? revisionStrength(topic) : 0;
+    const strengthRow = topic ? `
+      <div class="fc-strength">
+        <span class="lbl">Revision</span>
+        <span class="track"><i style="width:${str}%"></i></span>
+        <span class="val">${str}% · ${strengthBand(str)}</span>
+      </div>` : '';
     stage = `
       <div class="fc-prog"><i style="width:${pct}%"></i></div>
       <div class="fc-progtxt"><span>Card ${deckPos+1} of ${deck.length}</span><span>${deck.length-deckPos-1} left</span></div>
@@ -47,7 +57,8 @@ function renderFlashcards(){
             <div class="content">${md(c.front)}</div></div>
           <div class="face back"><span class="side-lbl">Answer</span>
             <div class="content">${md(c.back)}</div>
-            <div class="foot"><span class="t topic">${esc(c._topic)}</span><span class="t">${esc(c._domain)}</span>${tags}</div>
+            <div class="foot"><span class="t topic">${esc(c._topic)}</span>${topic?`<span class="t st-${esc(topic.status)}">${esc(topic.status)}</span>`:''}<span class="t">${esc(c._domain)}</span>${tags}</div>
+            ${strengthRow}
           </div>
         </div>
       </div>

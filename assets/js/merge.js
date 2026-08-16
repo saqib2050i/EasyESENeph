@@ -38,10 +38,21 @@ function _clampPriority(status, p){
   return Math.max(1, Math.min(5, p));
 }
 
+/* Flashcard revision record. Owned by the app, never by a batch. */
+function normalizeCardStats(t){
+  const cs = (t.cardStats && typeof t.cardStats === 'object') ? t.cardStats : {};
+  cs.boxes = (cs.boxes && typeof cs.boxes === 'object') ? cs.boxes : {};
+  ['reps','again','good','easy'].forEach(k => { if(typeof cs[k] !== 'number') cs[k] = 0; });
+  cs.lastReviewed = cs.lastReviewed || '';
+  t.cardStats = cs;
+  return cs;
+}
+
 /* Normalise a standalone topic (recompute derived fields, fill arrays). */
 function normalizeTopic(t){
   t.encounters = t.encounters || [];
   t.flashcards = t.flashcards || [];
+  normalizeCardStats(t);
   _recomputeStats(t);
   t.status = _recomputeStatus(t);
   t.priority = _clampPriority(t.status, t.priority);
@@ -50,6 +61,10 @@ function normalizeTopic(t){
 
 function _mergeTopic(base, inc){
   let encAdded = 0, cardsAdded = 0;
+  // cardStats is local revision history, not authored content: keep the copy
+  // already on the deck and ignore anything an incoming batch carries, so
+  // re-ingesting a batch can never wipe a topic's revision record.
+  normalizeCardStats(base);
   // Refresh teaching content from the batch when provided (LLM improves it).
   ['title','domain','subtopic','explainer'].forEach(k => { if(inc[k] != null && inc[k] !== '') base[k] = inc[k]; });
   ['highYield','pitfalls','references'].forEach(k => { if(Array.isArray(inc[k]) && inc[k].length) base[k] = inc[k]; });

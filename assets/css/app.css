@@ -160,6 +160,16 @@ a{color:var(--link);text-decoration:none}
 .face .foot{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
 .face .foot .t{background:var(--surface-2);padding:2px 8px;border-radius:20px}
 .face .foot .t.topic{color:var(--accent);background:var(--accent-soft)}
+.face .foot .t.st-weak{color:var(--weak)}
+.face .foot .t.st-review{color:var(--review)}
+.face .foot .t.st-mastered{color:var(--mastered)}
+
+/* Revision strength — earned by flashcards, shown beside the MCQ-owned status */
+.fc-strength{display:flex;align-items:center;gap:9px;margin-top:10px;font-family:var(--font-mono);font-size:10px}
+.fc-strength .lbl{color:var(--text-faint);letter-spacing:1px;text-transform:uppercase}
+.fc-strength .track{flex:1;height:5px;background:var(--surface-2);border-radius:20px;overflow:hidden;min-width:60px}
+.fc-strength .track i{display:block;height:100%;background:var(--mastered);border-radius:20px;transition:width .4s ease}
+.fc-strength .val{color:var(--text-dim);white-space:nowrap}
 
 .grade-row{display:flex;gap:10px;width:min(640px,100%)}
 .grade{

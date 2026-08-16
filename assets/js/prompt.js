@@ -78,6 +78,8 @@ Return ONLY one valid JSON object — double quotes, no trailing commas, no comm
       "references": [ "Guideline/Trial" ]
     }
   ]
+  // Do NOT emit "cardStats" — that is my flashcard revision record, owned by
+  // the app. The merge ignores it in a batch so revision history is never lost.
 }
 
 Stop after the JSON. Do not summarise.`;

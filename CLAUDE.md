@@ -52,6 +52,7 @@ topic:  { id, title, domain, subtopic,
           status: "weak"|"review"|"mastered", priority: 1..5,
           stats: { seen, correct },
           encounters: [{ date, source, correct:bool, note }],
+          cardStats: { boxes:{cardId:box}, reps, again, good, easy, lastReviewed },  // app-owned, see below
           highYield: [string], explainer: markdown-string, pitfalls: [string],
           flashcards: [{ id, front, back, tags:[string] }],
           references: [string] }
@@ -61,6 +62,14 @@ kbArticle: { id, title, domain, aliases:[string], summary: markdown,
           references: [string], guideline, lastUpdated,
           links: { topics:[topicId], kb:[kbId] } }   // articles live in deck.knowledgeBase[]
 ```
+**`cardStats` is app-owned, not authored.** It records flashcard revision (Leitner boxes per card) and is
+written only by the app — `srs.js` → `POST /api/cardstats` with a backend, or the `nephron-data` fallback
+without one. **Both merge engines deliberately ignore `cardStats` on an incoming batch** and keep the copy
+already on the deck, because `_merge_topic` refreshes flashcards in place (`by_id[id].update(c)`) — putting
+progress on the card object would let a re-ingest wipe it. The prompts tell the LLM not to emit it. Topic
+`status` stays **owned by MCQ `encounters`**; revision surfaces separately as `revisionStrength()` (mean box
+across a topic's cards, capped at box 3) so drilling cards never relabels a topic.
+
 `id` (topic, flashcard, kbArticle) values are **stable slugs** — the merge engines match batches by them.
 Never regenerate or renumber existing ids in a way that would break that merge. The **knowledge base**
 (`deck.knowledgeBase`) is didactic notes, merged by id independently of `topics`; a batch may contain

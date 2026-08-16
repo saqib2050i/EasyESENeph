@@ -106,6 +106,8 @@ no text before or after) matching this shape exactly:
       "references":[ "Guideline/Trial" ]
     }
   ]
+  // Do NOT emit "cardStats" — that is my flashcard revision record, owned by
+  // the app. The merge ignores it in a batch so revision history is never lost.
 }
 ```
 
