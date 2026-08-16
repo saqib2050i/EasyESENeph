@@ -7,6 +7,7 @@
 let DATA = { meta:{}, topics:[] };
 let VIEW = 'dashboard';
 let deck = [], deckPos = 0, flipped = false;
+let roundSize = +(store.get('nephron-round') || 20);   // cards per study round
 let filterDomain = 'all', filterStatus = 'all';
 let topicSearch = '';
 let dataSource = 'server';       // 'server-db' | 'browser' | 'server' | 'embedded'
@@ -47,7 +48,7 @@ function allCards(){
     seen.add(k);
     out.push({ ...c, ...meta });
   };
-  DATA.topics.forEach(t => (t.flashcards||[]).forEach(c => add(c, { _topic:t.title, _domain:t.domain, _status:t.status })));
+  DATA.topics.forEach(t => (t.flashcards||[]).forEach(c => add(c, { _topic:t.title, _topicId:t.id, _domain:t.domain, _status:t.status })));
   kb().forEach(a => (a.flashcards||[]).forEach(c => add(c, { _topic:a.title, _domain:a.domain, _status:'review', _kb:a.id })));
   return out;
 }

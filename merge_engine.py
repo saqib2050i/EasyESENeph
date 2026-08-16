@@ -75,9 +75,23 @@ def _clamp_priority(status, p):
     return max(1, min(5, int(p)))
 
 
+def normalize_cardstats(t):
+    """Flashcard revision record. Owned by the app, never by a batch."""
+    cs = t.get("cardStats")
+    if not isinstance(cs, dict):
+        cs = {}
+    cs["boxes"] = cs.get("boxes") if isinstance(cs.get("boxes"), dict) else {}
+    for k in ("reps", "again", "good", "easy"):
+        cs[k] = cs[k] if isinstance(cs.get(k), int) else 0
+    cs["lastReviewed"] = cs.get("lastReviewed") or ""
+    t["cardStats"] = cs
+    return cs
+
+
 def normalize_topic(t):
     t["encounters"] = t.get("encounters") or []
     t["flashcards"] = t.get("flashcards") or []
+    normalize_cardstats(t)
     _recompute_stats(t)
     t["status"] = _recompute_status(t)
     t["priority"] = _clamp_priority(t["status"], t.get("priority"))
@@ -86,6 +100,10 @@ def normalize_topic(t):
 
 def _merge_topic(base, inc):
     enc_added = cards_added = 0
+    # cardStats is local revision history, not authored content: keep the
+    # copy already on the deck and ignore anything an incoming batch carries,
+    # so re-ingesting a batch can never wipe a topic's revision record.
+    normalize_cardstats(base)
     for k in ("title", "domain", "subtopic", "explainer"):
         if inc.get(k) not in (None, ""):
             base[k] = inc[k]

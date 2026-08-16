@@ -250,7 +250,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, {"ok": True}, headers={"Set-Cookie": self._session_cookie("", 0)})
 
             # ---- everything below requires a valid session ----
-            if path in ("/api/deck", "/api/validate", "/api/ingest"):
+            if path in ("/api/deck", "/api/validate", "/api/ingest", "/api/cardstats"):
                 if not self._authed():
                     return self._send(401, {"ok": False, "errors": ["Not signed in."]})
             if path == "/api/deck" and method == "GET":
@@ -276,6 +276,34 @@ class Handler(BaseHTTPRequestHandler):
                     write_deck(deck)
                 return self._send(200, {"ok": True, "mode": mode, "summary": summary,
                                         "warnings": res["warnings"], "deck": deck})
+            if path == "/api/cardstats" and method == "POST":
+                # Flashcard revision progress only. Writes topic.cardStats and
+                # nothing else, so it can never touch authored content, the
+                # MCQ record, or the MCQ-derived status.
+                try:
+                    body = json.loads(self._body() or "{}")
+                except json.JSONDecodeError:
+                    return self._send(400, {"ok": False, "errors": ["Malformed cardStats request."]})
+                incoming = body.get("topics")
+                if not isinstance(incoming, list):
+                    return self._send(400, {"ok": False, "errors": ['Expected a "topics" array.']})
+                with LOCK:
+                    deck = read_deck()
+                    by_id = {t["id"]: t for t in deck.get("topics", []) if t.get("id")}
+                    saved = 0
+                    for item in incoming:
+                        if not isinstance(item, dict):
+                            continue
+                        t = by_id.get(item.get("id"))
+                        cs = item.get("cardStats")
+                        if t is None or not isinstance(cs, dict):
+                            continue
+                        t["cardStats"] = cs
+                        ME.normalize_cardstats(t)
+                        saved += 1
+                    if saved:
+                        write_deck(deck)
+                return self._send(200, {"ok": True, "saved": saved})
             if method == "GET":
                 return self.static(path)
             return self._send(404, {"ok": False, "errors": ["Not found."]})
