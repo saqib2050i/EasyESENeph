@@ -55,6 +55,50 @@ function allCards(){
   return out;
 }
 
+/* ---- curriculum coverage (blueprint.js) ----
+   A theme counts as covered when any topic or KB article matches one of its
+   keys. Matching is over id + title + subtopic + aliases, lower-cased, so a
+   key is a substring hint rather than an exact identifier. */
+function _searchBlob(){
+  const parts = [];
+  // Deliberate, structural text only — ids, titles, aliases, section headings,
+  // key points and high-yield bullets. Body prose is excluded on purpose: a
+  // passing mention of a term is not coverage, and matching it would report
+  // false confidence about topics you have never actually studied.
+  DATA.topics.forEach(t => parts.push({
+    kind:'topic', id:t.id,
+    hay:[t.id, t.title, t.subtopic||'', (t.highYield||[]).join(' ')].join(' ').toLowerCase() }));
+  kb().forEach(a => parts.push({
+    kind:'kb', id:a.id,
+    hay:[a.id, a.title, (a.aliases||[]).join(' '),
+         (a.sections||[]).map(x => x.heading).join(' '),
+         (a.keyPoints||[]).join(' ')].join(' ').toLowerCase() }));
+  return parts;
+}
+
+function blueprintCoverage(){
+  const blob = _searchBlob();
+  return (typeof EXAM_CATEGORIES === 'undefined' ? [] : EXAM_CATEGORIES).map(cat => {
+    const themes = cat.themes.map(th => {
+      const hits = blob.filter(b => th.keys.some(k => b.hay.includes(k)));
+      return { label: th.label, covered: hits.length > 0,
+               topics: hits.filter(h => h.kind==='topic').length,
+               kb: hits.filter(h => h.kind==='kb').length };
+    });
+    const covered = themes.filter(t => t.covered).length;
+    // performance is still measured on the finer domains this category maps to
+    let seen = 0, correct = 0, nTopics = 0;
+    (cat.domains||[]).forEach(d => DATA.topics.filter(t => t.domain===d).forEach(t => {
+      seen += t.stats?.seen||0; correct += t.stats?.correct||0; nTopics++;
+    }));
+    return { n:cat.n, name:cat.name, note:cat.note||'', themes,
+             covered, total: themes.length,
+             pct: themes.length ? Math.round(100*covered/themes.length) : 0,
+             topics:nTopics, seen, correct,
+             acc: seen ? Math.round(100*correct/seen) : null };
+  });
+}
+
 function domainStats(){
   const m = {};
   DATA.topics.forEach(t => {
