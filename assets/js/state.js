@@ -113,6 +113,74 @@ function domainStats(){
     .sort((a,b) => (a.pct ?? 101) - (b.pct ?? 101));
 }
 
+/* ---- what to study next ------------------------------------------------
+   `priority` on the topic is derived from `status` by the merge engines, so
+   sorting by status and then priority is circular — it ranks by one thing
+   twice. This computes a genuine study score instead, combining how badly
+   you answer the topic, how long since you touched it, how far its revision
+   has got, and how weak its whole domain is. Derived at render time, so no
+   schema change and nothing to migrate.
+
+   Returns { score 0..1, reasons[] } — the reasons are shown in the UI so the
+   ranking explains itself rather than being an opaque number. */
+function _daysSince(iso){
+  if(!iso) return null;
+  const d = Date.parse(iso);
+  if(isNaN(d)) return null;
+  return Math.max(0, Math.round((Date.now() - d) / 86400000));
+}
+
+function _domainAccuracy(){
+  const m = {};
+  DATA.topics.forEach(t => {
+    const d = t.domain || '?';
+    if(!m[d]) m[d] = { seen:0, correct:0 };
+    m[d].seen += t.stats?.seen||0; m[d].correct += t.stats?.correct||0;
+  });
+  Object.keys(m).forEach(k => m[k] = m[k].seen ? m[k].correct/m[k].seen : 1);
+  return m;
+}
+
+function studyScore(t, domAcc){
+  domAcc = domAcc || _domainAccuracy();
+  const seen = t.stats?.seen||0, correct = t.stats?.correct||0;
+  const reasons = [];
+
+  const accGap = seen ? 1 - correct/seen : 0.5;
+  if(seen && correct === 0)      reasons.push(`${seen}/${seen} wrong`);
+  else if(accGap >= 0.5)         reasons.push(`${correct}/${seen} correct`);
+
+  const statusW = t.status==='weak' ? 1 : t.status==='mastered' ? 0 : 0.5;
+  if(t.status==='weak') reasons.push('weak');
+
+  // most recent contact: an MCQ attempt or a flashcard review
+  const lastEnc = (t.encounters||[]).map(e => e.date).filter(Boolean).sort().pop();
+  const lastRev = t.cardStats?.lastReviewed;
+  const last = [lastEnc, lastRev].filter(Boolean).sort().pop();
+  const days = _daysSince(last);
+  const stale = days === null ? 0.5 : Math.min(1, days/90);
+  if(days !== null && days >= 30) reasons.push(`${days}d since seen`);
+
+  const strength = (typeof revisionStrength === 'function') ? revisionStrength(t) : 0;
+  const revGap = 1 - strength/100;
+  if(strength === 0 && (t.flashcards||[]).length) reasons.push('never revised');
+
+  const dGap = 1 - (domAcc[t.domain] ?? 1);
+  if(dGap >= 0.45) reasons.push('weak domain');
+
+  const score = 0.30*accGap + 0.25*statusW + 0.20*stale + 0.15*revGap + 0.10*dGap;
+  return { score, reasons, days, strength };
+}
+
+/* Topics ranked by what would most repay studying now. */
+function studyQueue(n){
+  const domAcc = _domainAccuracy();
+  return DATA.topics
+    .map(t => ({ topic:t, ...studyScore(t, domAcc) }))
+    .sort((a,b) => b.score - a.score)
+    .slice(0, n || 8);
+}
+
 function totals(){
   let seen = 0, correct = 0, weak = 0, mastered = 0;
   DATA.topics.forEach(t => {
