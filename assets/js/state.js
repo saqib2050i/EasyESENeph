@@ -10,6 +10,8 @@ let deck = [], deckPos = 0, flipped = false;
 let roundSize = +(store.get('nephron-round') || 20);   // cards per study round
 let filterDomain = 'all', filterStatus = 'all';
 let topicSearch = '';
+let topicDomain = 'all', topicStatus = 'all';   // Topics view filters (separate from the flashcard filters)
+const expandedDomains = new Set();              // Topics view: domain sections the user has opened
 let dataSource = 'server';       // 'server-db' | 'browser' | 'server' | 'embedded'
 let pendingImport = null;        // staged { raw, incoming?, summary, errors, warnings } awaiting confirmation
 let backend = false;             // true when the API (/api/*) is reachable
