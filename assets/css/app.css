@@ -209,6 +209,39 @@ a{color:var(--link);text-decoration:none}
 .search{flex:1;min-width:200px;position:relative}
 .search input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:var(--font-ui);font-size:14px;padding:10px 14px}
 .search input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+/* Domain sections — the header row doubles as a curriculum overview */
+.dsec{border:1px solid var(--border-soft);border-radius:var(--r);margin-bottom:12px;overflow:hidden;background:var(--surface)}
+.dsec-head{
+  display:flex;align-items:center;gap:12px;width:100%;padding:14px 18px;cursor:pointer;user-select:none;
+  background:none;border:none;color:var(--text);font-family:var(--font-ui);text-align:left;
+}
+.dsec-head:hover{background:var(--raised)}
+.dsec-head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.dsec-head .chev{color:var(--text-faint);transition:transform .2s;flex:none}
+.dsec.open .dsec-head .chev{transform:rotate(180deg)}
+.dsec-head .dname{font-weight:600;font-size:15px}
+.dsec-head .dmeta{font-family:var(--font-mono);font-size:11px;color:var(--text-faint)}
+.dsec-head .dmeta .wk{color:var(--weak);font-weight:600}
+.dcov{
+  margin-left:auto;font-family:var(--font-mono);font-size:11px;font-weight:600;
+  padding:3px 9px;border-radius:20px;flex:none;
+}
+.dcov.good{background:color-mix(in srgb,var(--mastered) 18%,transparent);color:var(--mastered)}
+.dcov.mid {background:color-mix(in srgb,var(--review) 18%,transparent);color:var(--review)}
+.dcov.bad {background:color-mix(in srgb,var(--weak) 18%,transparent);color:var(--weak)}
+.dcov.dash{color:var(--text-faint)}
+.dsec-body{display:none;padding:4px 14px 14px;border-top:1px solid var(--border-soft)}
+.dsec.open .dsec-body{display:block}
+.subgroup{margin-top:12px}
+.sublab{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--accent);margin:0 0 8px 2px;
+}
+.prio{
+  font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--weak);
+  border:1px solid color-mix(in srgb,var(--weak) 45%,transparent);border-radius:4px;padding:1px 5px;flex:none;
+}
+.empty{color:var(--text-faint);padding:30px 4px;font-size:14px}
 .tcard{background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
 .tcard-head{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;user-select:none;width:100%;text-align:left;background:none;border:none;color:var(--text);font-family:var(--font-ui)}
 .tcard-head:hover{background:var(--raised)}
