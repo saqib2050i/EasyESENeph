@@ -17,6 +17,29 @@ function renderDashboard(){
     </div>`;
   }).join('') || '<div class="focus-empty">No data yet. Load a data.json to begin.</div>';
 
+  // Curriculum coverage — the only panel that can report what has NEVER
+  // been studied, since it measures the deck against the blueprint rather
+  // than against itself.
+  const bp = blueprintCoverage();
+  const bpGaps = bp.flatMap(c => c.themes.filter(th => !th.covered).map(th => ({ cat:c.n, label:th.label })));
+  const bpDone = bp.reduce((n,c) => n + c.covered, 0), bpTotal = bp.reduce((n,c) => n + c.total, 0);
+  const coveragePanel = bp.length ? `
+    <div class="panel">
+      <h2>Curriculum coverage</h2>
+      <div class="hint">Exam categories vs the deck — <b>${bpDone} of ${bpTotal}</b> expected themes covered. Bars show coverage, not accuracy.</div>
+      <div class="matrix cov">${bp.map(c => {
+        const col = c.pct >= 90 ? 'var(--mastered)' : c.pct >= 70 ? 'var(--review)' : 'var(--weak)';
+        return `<div class="mrow">
+          <div class="lab">${c.n}. ${esc(c.name)}<span>${c.covered}/${c.total} themes${c.acc!=null?` · ${c.acc}% correct`:''}</span></div>
+          <div class="track"><div class="fill" style="width:${c.pct}%;background:${col}"></div></div>
+          <div class="pct" style="color:${col}">${c.pct}%</div>
+        </div>`;
+      }).join('')}</div>
+      ${bpGaps.length ? `<div class="gaps"><div class="gaps-lab">Not covered yet — nothing in topics or the knowledge base</div>
+        ${bpGaps.map(g => `<span class="gap">${esc(g.label)}<b>${g.cat}</b></span>`).join('')}</div>`
+        : '<div class="gaps"><div class="gaps-lab">Every blueprint theme has at least one topic or article.</div></div>'}
+    </div>` : '';
+
   const trend = activityTrend();
   const trendPanel = trend.length ? `
     <div class="panel">
@@ -53,6 +76,7 @@ function renderDashboard(){
     <h2>Domain accuracy matrix</h2><div class="hint">Green ≥80% · amber 55–79% · red &lt;55%. A dash means untested.</div>
     <div class="matrix">${matrix}</div>
   </div>
+  ${coveragePanel}
   ${trendPanel}
   <div class="panel">
     <h2>Focus next</h2><div class="hint">Weak status first, then priority. Recent attempts shown as dots (green correct, red wrong).</div>
