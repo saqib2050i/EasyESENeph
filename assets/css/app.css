@@ -94,6 +94,12 @@ a{color:var(--link);text-decoration:none}
 .pill.review{background:color-mix(in srgb,var(--review) 20%,transparent);color:var(--review)}
 .pill.mastered{background:color-mix(in srgb,var(--mastered) 20%,transparent);color:var(--mastered)}
 .focus-item .ft{font-weight:500;font-size:14px}
+.focus-item .ft{display:flex;flex-direction:column;gap:4px;min-width:0}
+.whys{display:flex;gap:5px;flex-wrap:wrap}
+.why{
+  font-family:var(--font-mono);font-size:9.5px;color:var(--text-faint);
+  background:var(--surface-2);border-radius:20px;padding:1px 7px;white-space:nowrap;
+}
 .focus-item .fd{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);margin-left:auto;text-align:right;flex:none}
 .dots{display:inline-flex;gap:3px;margin-left:9px}
 .dot{width:7px;height:7px;border-radius:50%}

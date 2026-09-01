@@ -3,9 +3,8 @@
 
 function renderDashboard(){
   const t = totals(), ds = domainStats();
-  const focus = [...DATA.topics]
-    .sort((a,b) => (statusRank(a.status) - statusRank(b.status)) || ((b.priority||0) - (a.priority||0)))
-    .slice(0,6);
+  // Ranked by studyScore, not by status→priority (which is circular).
+  const focus = studyQueue(8);
 
   const matrix = ds.map(d => {
     const pct = d.pct == null ? 0 : d.pct;
@@ -54,11 +53,12 @@ function renderDashboard(){
       }).join('')}</div>
     </div>` : '';
 
-  const focusList = focus.length ? focus.map(t => {
+  const focusList = focus.length ? focus.map(({topic:t, reasons}) => {
     const dots = (t.encounters||[]).slice(-6).map(e => `<span class="dot ${e.correct?'c':'w'}"></span>`).join('');
+    const why = reasons.slice(0,3).map(r => `<span class="why">${esc(r)}</span>`).join('');
     return `<div class="focus-item" tabindex="0" role="link" data-goto="${escAttr(t.id)}">
       <span class="pill ${esc(t.status)}">${esc(t.status)}</span>
-      <span class="ft">${esc(t.title)}</span>
+      <span class="ft">${esc(t.title)}${why?`<span class="whys">${why}</span>`:''}</span>
       <span class="fd">${esc(t.domain)}${dots?`<span class="dots">${dots}</span>`:''}</span>
     </div>`;
   }).join('') : '<div class="focus-empty">Nothing flagged yet.</div>';
@@ -79,7 +79,7 @@ function renderDashboard(){
   ${coveragePanel}
   ${trendPanel}
   <div class="panel">
-    <h2>Focus next</h2><div class="hint">Weak status first, then priority. Recent attempts shown as dots (green correct, red wrong).</div>
+    <h2>Focus next</h2><div class="hint">Ranked by accuracy, how long since you last touched it, revision progress and domain weakness. Tags explain the ranking; dots are recent attempts.</div>
     <div class="focus-list">${focusList}</div>
   </div>`;
 }

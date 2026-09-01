@@ -43,6 +43,11 @@ function switchView(v){
 
 /* Shared: jump from a dashboard focus item to its expanded topic card. */
 function gotoTopic(id){
+  // The Topics view folds domain sections by default, so a card can be
+  // "open" yet invisible inside a collapsed section. Expand its domain
+  // first, or arriving from the dashboard appears to do nothing.
+  const t = DATA.topics.find(x => x.id === id);
+  if(t && typeof expandedDomains !== 'undefined') expandedDomains.add(t.domain);
   switchView('topics');
   setTimeout(() => {
     const c = document.querySelector(`.tcard[data-id="${CSS.escape(id)}"]`);
